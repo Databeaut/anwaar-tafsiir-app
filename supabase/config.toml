@@ -1,0 +1,19 @@
+project_id = "awfimksqqcwzubwboaqi"
+
+[functions.validate-access]
+verify_jwt = false
+
+[functions.verify-session]
+verify_jwt = false
+
+[functions.create-access-key]
+verify_jwt = false
+
+[functions.get-recent-keys]
+verify_jwt = false
+
+[functions.admin-login]
+verify_jwt = false
+
+[functions.get-surah-details]
+verify_jwt = false
