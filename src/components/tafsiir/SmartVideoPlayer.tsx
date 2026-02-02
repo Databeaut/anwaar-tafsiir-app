@@ -255,15 +255,18 @@ const SmartVideoPlayer = ({
         if (idx !== currentLessonIndex) {
             onLessonChange(idx);
             setIsPlaying(false); // Reset play state when changing lesson
+        } else {
+            // Updated: Toggle play if clicking the active card
+            togglePlay();
         }
     };
 
     if (lessons.length === 0) return null;
 
     return (
-        <div className="w-full max-w-7xl mx-auto p-4 md:p-6 space-y-8 flex flex-col">
+        <div className="w-full max-w-7xl mx-auto px-4 py-4 md:p-6 space-y-8 flex flex-col">
             {/* 0. HEADER TITLE - Mobile Responsive */}
-            <h1 className="text-3xl md:text-5xl font-semibold text-center mb-4 md:mb-8 font-arabic bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent drop-shadow-sm order-1">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-semibold text-center mb-4 md:mb-8 font-arabic bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent drop-shadow-sm order-1">
                 سورة الفاتحة
             </h1>
 
@@ -285,7 +288,7 @@ const SmartVideoPlayer = ({
                 >
                     <div className="bg-black/50 px-4 py-3 md:px-8 md:py-6 rounded-full backdrop-blur-md border border-white/10 shadow-2xl max-w-[85%] md:max-w-[80%] text-center transform transition-transform duration-700 hover:scale-105 mt-2 md:mt-0">
                         <p
-                            className="text-xl md:text-5xl font-bold text-white text-center leading-normal font-arabic"
+                            className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center leading-normal font-arabic"
                             dir="rtl"
                         >
                             {currentAyahText}
@@ -415,14 +418,14 @@ const SmartVideoPlayer = ({
                 )}
             </div>
 
-            {/* 2. NAVIGATION BAR (HORIZONTAL ROW) - Order 3 on Mobile */}
+            {/* 2. NAVIGATION BAR (VERTICAL GRID) - Order 3 on Mobile */}
             <div className="order-3">
                 <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                     <span className="w-1 h-6 bg-emerald-500 rounded-full" />
                     Qaybaha Casharka
                 </h2>
 
-                <div className="flex overflow-x-auto pb-4 gap-4 scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-emerald-500/50 scrollbar-track-transparent snap-x">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {lessons.map((lesson, idx) => {
                         const isActive = idx === currentLessonIndex;
                         const isCompleted = !lesson.isLocked && idx < currentLessonIndex;
@@ -432,7 +435,7 @@ const SmartVideoPlayer = ({
                                 key={lesson.id}
                                 onClick={() => !lesson.isLocked && handleLessonCardClick(idx)}
                                 className={`
-                                    relative flex-shrink-0 w-40 snap-start group text-left m-1
+                                    relative group text-left
                                     rounded-2xl transition-all duration-200 border backdrop-blur-xl overflow-hidden
                                     focus:outline-none active:outline-none active:ring-4 active:ring-emerald-500/10
                                     ${isActive
@@ -442,37 +445,46 @@ const SmartVideoPlayer = ({
                                     ${lesson.isLocked ? "opacity-40 cursor-not-allowed grayscale" : "cursor-pointer"}
                                 `}
                             >
-                                <div className="p-6 flex flex-col h-full gap-3">
-                                    {/* Top Icon */}
-                                    <div className="flex justify-between items-start">
-                                        <div className={`
-                                            w-8 h-8 rounded-lg flex items-center justify-center transition-colors
-                                            ${isActive ? "bg-emerald-500 text-black shadow-lg shadow-emerald-500/20" :
-                                                isCompleted ? "bg-emerald-500/20 text-emerald-500" : "bg-white/10 text-zinc-400"}
-                                        `}>
-                                            {lesson.isLocked ? <Lock className="w-3.5 h-3.5" /> :
-                                                isActive && isPlaying ? <Pause className="w-4 h-4 fill-current" /> :
-                                                    isCompleted ? <CheckCircle2 className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current" />}
-                                        </div>
-
-                                        {isCompleted && (
-                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
-                                        )}
+                                <div className="p-6 flex flex-row items-center gap-4">
+                                    {/* Left Icon */}
+                                    <div className={`
+                                        w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center transition-colors
+                                        ${isActive ? "bg-emerald-500 text-black shadow-lg shadow-emerald-500/20" :
+                                            isCompleted ? "bg-emerald-500/20 text-emerald-500" : "bg-white/10 text-zinc-400"}
+                                    `}>
+                                        {lesson.isLocked ? <Lock className="w-5 h-5" /> :
+                                            isActive && isPlaying ? <Pause className="w-6 h-6 fill-current" /> :
+                                                isCompleted ? <CheckCircle2 className="w-6 h-6" /> : <Play className="w-6 h-6 fill-current" />}
                                     </div>
 
                                     {/* Text Info */}
-                                    <div className="mt-auto">
-                                        <div className="text-[10px] font-medium text-zinc-300 uppercase tracking-widest mb-0.5">Qaybta {idx + 1}</div>
-                                        <div className="text-white text-lg font-semibold leading-tight">
-                                            {lesson.duration}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex justify-between items-center mb-1">
+                                            <span className="text-xs font-medium text-zinc-400 uppercase tracking-widest">Qaybta {idx + 1}</span>
+                                            {isCompleted && (
+                                                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
+                                            )}
                                         </div>
 
-                                        {/* Progress Line */}
-                                        <div className="h-0.5 w-full bg-white/10 rounded-full overflow-hidden mt-3">
-                                            <div className={`h-full rounded-full transition-all duration-500 ${isCompleted || isActive ? "bg-emerald-500" : "bg-transparent"}`}
-                                                style={{ width: isCompleted ? '100%' : isActive ? `${(currentTime / duration) * 100}%` : '0%' }} />
+                                        <div className="text-white text-lg font-semibold truncate leading-tight mb-1">
+                                            {lesson.subtitle}
+                                        </div>
+
+                                        <div className="text-sm text-zinc-400 flex items-center gap-2">
+                                            <span>{lesson.duration}</span>
+                                            {isActive && (
+                                                <span className="text-emerald-400 text-xs font-medium px-2 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Active</span>
+                                            )}
                                         </div>
                                     </div>
+                                </div>
+
+                                {/* Bottom Progress Line */}
+                                <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5">
+                                    <div
+                                        className={`h-full transition-all duration-500 ${isCompleted || isActive ? "bg-emerald-500" : "bg-transparent"}`}
+                                        style={{ width: isCompleted ? '100%' : isActive ? `${(currentTime / duration) * 100}%` : '0%' }}
+                                    />
                                 </div>
                             </button>
                         );
