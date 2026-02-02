@@ -302,35 +302,36 @@ const SmartVideoPlayer = ({
                 </div>
 
                 {/* C. COMPLETION OVERLAY - z-[60] to be strictly on top */}
+                {/* C. COMPLETION OVERLAY - Fixed Modal for Mobile Responsiveness */}
                 {showCompletionOverlay && (
-                    <div className="absolute inset-0 z-[60] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-zinc-950 to-zinc-950 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-500">
-                        <div className="bg-zinc-950/40 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-6 md:p-12 shadow-2xl shadow-emerald-950/20 w-[92%] max-w-md md:max-w-lg transform transition-all hover:scale-[1.02]">
+                    <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center p-4 animate-in fade-in duration-300">
+                        <div className="bg-zinc-950 border border-white/10 rounded-3xl p-6 w-[92%] max-w-sm shadow-2xl shadow-emerald-900/20 transform transition-all">
                             {isSurahCompleted ? (
                                 <div className="flex flex-col items-center text-center">
-                                    <div className="relative inline-flex mb-8">
-                                        <div className="absolute inset-0 bg-emerald-500/30 blur-2xl rounded-full" />
-                                        <CheckCircle2 className="relative w-24 h-24 text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)] shadow-[0_0_50px_rgba(16,185,129,0.3)] rounded-full bg-black/20" />
+                                    <div className="relative inline-flex mb-6">
+                                        <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full" />
+                                        <CheckCircle2 className="relative w-16 h-16 text-emerald-500 drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
                                     </div>
 
-                                    <h3 className="text-2xl md:text-3xl font-bold text-white mt-8 tracking-tight">Casharka Waa Dhamaaday!</h3>
-                                    <p className="text-zinc-300/80 text-lg mt-3 mb-12 font-medium leading-relaxed">Alhamdulillah, waxaad dhamaysatay tafsiirka suuradan.</p>
+                                    <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">Casharka Waa Dhamaaday!</h3>
+                                    <p className="text-zinc-400 text-sm mb-8 leading-relaxed">Alhamdulillah, waxaad dhamaysatay tafsiirka suuradan.</p>
 
                                     <a
                                         href="https://wa.me/632441316?text=Assalamu%20alaykum%20Macalin,%20waxaan%20si%20guul%20leh%20u%20dhameeyay%20Tafsiirka%20Surah%20Al-Fatiha."
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex w-full items-center justify-center gap-3 px-12 py-5 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl text-xl font-extrabold text-white hover:scale-105 hover:shadow-emerald-900/40 transition-transform duration-300 shadow-lg"
+                                        className="flex items-center justify-center gap-2 w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl text-white font-bold hover:scale-[1.02] transition-transform shadow-lg"
                                     >
                                         <span>U Dir Macalinka</span>
-                                        <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                                     </a>
                                 </div>
                             ) : (
-                                <div className="space-y-6">
-                                    <h3 className="text-2xl md:text-3xl font-bold text-white">Qaybtan Waa Dhamaatay</h3>
+                                <div className="flex flex-col items-center text-center space-y-6">
+                                    <h3 className="text-2xl font-bold text-white">Qaybtan Waa Dhamaatay</h3>
                                     <button
                                         onClick={handleContinue}
-                                        className="w-full px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl transition-all transform hover:scale-105 shadow-xl shadow-emerald-500/20 z-50"
+                                        className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg shadow-emerald-500/20"
                                     >
                                         Sii Wada Casharka
                                     </button>
