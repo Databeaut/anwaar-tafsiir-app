@@ -262,11 +262,34 @@ const SmartVideoPlayer = ({
         }
     };
 
-    const toggleFullScreen = () => {
-        if (!document.fullscreenElement) {
-            containerRef.current?.requestFullscreen();
-        } else {
-            if (document.exitFullscreen) document.exitFullscreen();
+    // 5. Fullscreen & Orientation Logic
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            if (!document.fullscreenElement) {
+                // Unlock orientation when exiting
+                if (screen.orientation && 'unlock' in screen.orientation) {
+                    (screen.orientation as any).unlock();
+                }
+            }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    }, []);
+
+    const toggleFullScreen = async () => {
+        try {
+            if (!document.fullscreenElement) {
+                await containerRef.current?.requestFullscreen();
+                // Attempt orientation lock (mobile only)
+                if (screen.orientation && 'lock' in screen.orientation) {
+                    await (screen.orientation as any).lock('landscape').catch((e: any) => console.log('Orientation lock failed:', e));
+                }
+            } else {
+                if (document.exitFullscreen) await document.exitFullscreen();
+            }
+        } catch (err) {
+            console.error("Fullscreen toggle error:", err);
         }
     };
 
@@ -280,14 +303,14 @@ const SmartVideoPlayer = ({
             </h1>
 
             {/* 1. LARGE MAIN PLAYER - FIXED CONTAINER - Force Order 2 on Mobile */}
-            <div ref={containerRef} className="relative w-full aspect-video min-h-[250px] bg-transparent rounded-3xl overflow-hidden shadow-2xl shadow-emerald-900/20 border border-white/5 ring-1 ring-white/5 group/player order-2">
+            <div ref={containerRef} className="relative w-full aspect-video min-h-[250px] bg-transparent rounded-3xl overflow-hidden shadow-2xl shadow-emerald-900/20 border border-white/5 ring-1 ring-white/5 group/player order-2 fullscreen:w-screen fullscreen:h-screen fullscreen:rounded-none fullscreen:border-0 fullscreen:bg-black">
 
                 {/* A. THE FRAME (CONTAINED MASK) */}
                 <div className="absolute inset-0 flex items-center justify-center z-0">
                     <img
                         src="/quran-frame.jpg"
                         alt="Quran Frame"
-                        className="w-full h-full object-cover select-none pointer-events-none"
+                        className="w-full h-full object-cover select-none pointer-events-none transition-all duration-300 fullscreen:object-contain fullscreen:w-full fullscreen:h-full"
                     />
                 </div>
 
@@ -486,7 +509,7 @@ const SmartVideoPlayer = ({
                                         <div className="text-sm text-zinc-400 flex items-center gap-2">
                                             <span>{lesson.duration}</span>
                                             {isActive && (
-                                                <span className="text-emerald-400 text-xs font-medium px-2 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Active</span>
+                                                <span className="text-emerald-400 text-xs font-medium px-2 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Fudud oo gaaban</span>
                                             )}
                                         </div>
                                     </div>
