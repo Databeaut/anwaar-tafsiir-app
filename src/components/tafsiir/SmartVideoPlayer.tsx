@@ -150,6 +150,10 @@ const SmartVideoPlayer = ({
                                 handleSegmentEnd(newPlayer);
                             }
                         },
+                        onReady: (event: any) => {
+                            // Correctly set initial time
+                            setCurrentTime(0);
+                        }
                     },
                 });
                 setPlayer(newPlayer);
@@ -220,8 +224,10 @@ const SmartVideoPlayer = ({
         if (!player) return;
         if (isPlaying) {
             player.pauseVideo();
+            setIsPlaying(false);
         } else {
             player.playVideo();
+            setIsPlaying(true);
         }
     };
 
@@ -244,17 +250,25 @@ const SmartVideoPlayer = ({
         }
     };
 
+    // Handle lesson card click to ensure audio sync
+    const handleLessonCardClick = (idx: number) => {
+        if (idx !== currentLessonIndex) {
+            onLessonChange(idx);
+            setIsPlaying(false); // Reset play state when changing lesson
+        }
+    };
+
     if (lessons.length === 0) return null;
 
     return (
-        <div className="w-full max-w-7xl mx-auto p-4 md:p-6 space-y-8">
-            {/* 0. HEADER TITLE */}
-            <h1 className="text-4xl md:text-5xl font-semibold text-center mb-2 md:mb-8 font-arabic bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent drop-shadow-sm">
+        <div className="w-full max-w-7xl mx-auto p-4 md:p-6 space-y-8 flex flex-col">
+            {/* 0. HEADER TITLE - Mobile Responsive */}
+            <h1 className="text-3xl md:text-5xl font-semibold text-center mb-4 md:mb-8 font-arabic bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent drop-shadow-sm order-1">
                 سورة الفاتحة
             </h1>
 
-            {/* 1. LARGE MAIN PLAYER - FIXED CONTAINER */}
-            <div className="relative w-full aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl shadow-emerald-900/20 border border-white/5 ring-1 ring-white/5 group/player">
+            {/* 1. LARGE MAIN PLAYER - FIXED CONTAINER - Force Order 2 on Mobile */}
+            <div className="relative w-full aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl shadow-emerald-900/20 border border-white/5 ring-1 ring-white/5 group/player order-2">
 
                 {/* A. THE FRAME (CONTAINED MASK) */}
                 <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -265,14 +279,13 @@ const SmartVideoPlayer = ({
                     />
                 </div>
 
-                {/* AYAH DISPLAY OVERLAY */}
-                {/* Positioned in FRAMED PILL CENTER with Fade Effect */}
+                {/* AYAH DISPLAY OVERLAY - Mobile Optimized */}
                 <div
                     className={`absolute inset-0 flex justify-center items-center z-30 pointer-events-none transition-opacity duration-700 ease-in-out ${currentAyahText ? 'opacity-100' : 'opacity-0'}`}
                 >
-                    <div className="bg-black/50 px-8 py-6 rounded-full backdrop-blur-md border border-white/10 shadow-2xl max-w-[90%] md:max-w-[80%] text-center transform transition-transform duration-700 hover:scale-105">
+                    <div className="bg-black/50 px-4 py-3 md:px-8 md:py-6 rounded-full backdrop-blur-md border border-white/10 shadow-2xl max-w-[85%] md:max-w-[80%] text-center transform transition-transform duration-700 hover:scale-105 mt-2 md:mt-0">
                         <p
-                            className="text-3xl md:text-5xl font-bold text-white text-center leading-relaxed font-arabic"
+                            className="text-xl md:text-5xl font-bold text-white text-center leading-normal font-arabic"
                             dir="rtl"
                         >
                             {currentAyahText}
@@ -333,9 +346,9 @@ const SmartVideoPlayer = ({
                         <div className="absolute inset-0 flex items-center justify-center">
                             <button
                                 onClick={togglePlay}
-                                className="w-24 h-24 rounded-full bg-emerald-500 hover:bg-emerald-400 flex items-center justify-center transition-transform hover:scale-110 shadow-2xl shadow-emerald-500/40"
+                                className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-emerald-500 hover:bg-emerald-400 flex items-center justify-center transition-transform hover:scale-110 shadow-2xl shadow-emerald-500/40"
                             >
-                                <Play className="w-12 h-12 text-black ml-1 fill-current" />
+                                <Play className="w-8 h-8 md:w-12 md:h-12 text-black ml-1 fill-current" />
                             </button>
                         </div>
                     )}
@@ -344,13 +357,13 @@ const SmartVideoPlayer = ({
                     <div className="flex-1 w-full" onClick={togglePlay} />
 
                     {/* Bottom Controls Bar */}
-                    <div className="px-12 pb-10 w-full" onClick={(e) => e.stopPropagation()}>
+                    <div className="px-4 pb-4 md:px-12 md:pb-10 w-full" onClick={(e) => e.stopPropagation()}>
 
                         {/* Progress Bar Container */}
-                        <div className="flex items-center gap-4 mb-4">
-                            <span className="text-xs font-mono text-emerald-100 font-bold min-w-[40px] px-2 py-1 rounded bg-black/60 backdrop-blur-sm border border-white/5">{formatTime(currentTime)}</span>
+                        <div className="flex items-center gap-2 md:gap-4 mb-4">
+                            <span className="text-[10px] md:text-xs font-mono text-emerald-100 font-bold min-w-[32px] md:min-w-[40px] px-1.5 py-0.5 rounded bg-black/60 backdrop-blur-sm border border-white/5">{formatTime(currentTime)}</span>
 
-                            <div className="relative flex-1 h-2 bg-black/40 backdrop-blur-sm rounded-full cursor-pointer group/progress border border-white/10">
+                            <div className="relative flex-1 h-1.5 md:h-2 bg-black/40 backdrop-blur-sm rounded-full cursor-pointer group/progress border border-white/10">
                                 {/* Fill */}
                                 <div
                                     className="absolute top-0 left-0 h-full bg-emerald-500 rounded-full z-10 shadow-[0_0_10px_rgba(16,185,129,0.5)]"
@@ -370,18 +383,18 @@ const SmartVideoPlayer = ({
                                 />
                             </div>
 
-                            <span className="text-xs font-mono text-emerald-100 font-bold min-w-[40px] text-right px-2 py-1 rounded bg-black/60 backdrop-blur-sm border border-white/5">{formatTime(duration)}</span>
+                            <span className="text-[10px] md:text-xs font-mono text-emerald-100 font-bold min-w-[32px] md:min-w-[40px] text-right px-1.5 py-0.5 rounded bg-black/60 backdrop-blur-sm border border-white/5">{formatTime(duration)}</span>
                         </div>
 
                         {/* Buttons Row with Backdrop for readability */}
-                        <div className="flex items-center justify-between px-4 py-2 rounded-xl bg-black/20 backdrop-blur-sm border border-white/5">
-                            <div className="flex items-center gap-6">
+                        <div className="flex items-center justify-between px-3 py-1.5 md:px-4 md:py-2 rounded-xl bg-black/20 backdrop-blur-sm border border-white/5">
+                            <div className="flex items-center gap-4 md:gap-6">
                                 <button onClick={togglePlay} className="text-white hover:text-emerald-400 transition-colors transform hover:scale-105 active:scale-95">
-                                    {isPlaying ? <Pause className="w-6 h-6 fill-current" /> : <Play className="w-6 h-6 fill-current" />}
+                                    {isPlaying ? <Pause className="w-5 h-5 md:w-6 md:h-6 fill-current" /> : <Play className="w-5 h-5 md:w-6 md:h-6 fill-current" />}
                                 </button>
                                 <div className="flex items-center gap-2">
                                     <button onClick={toggleMute} className="text-white/80 hover:text-white transition-colors">
-                                        {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                                        {isMuted ? <VolumeX className="w-4 h-4 md:w-5 md:h-5" /> : <Volume2 className="w-4 h-4 md:w-5 md:h-5" />}
                                     </button>
                                 </div>
                             </div>
@@ -402,8 +415,8 @@ const SmartVideoPlayer = ({
                 )}
             </div>
 
-            {/* 2. NAVIGATION BAR (HORIZONTAL ROW) */}
-            <div>
+            {/* 2. NAVIGATION BAR (HORIZONTAL ROW) - Order 3 on Mobile */}
+            <div className="order-3">
                 <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                     <span className="w-1 h-6 bg-emerald-500 rounded-full" />
                     Qaybaha Casharka
@@ -417,7 +430,7 @@ const SmartVideoPlayer = ({
                         return (
                             <button
                                 key={lesson.id}
-                                onClick={() => !lesson.isLocked && onLessonChange(idx)}
+                                onClick={() => !lesson.isLocked && handleLessonCardClick(idx)}
                                 className={`
                                     relative flex-shrink-0 w-40 snap-start group text-left m-1
                                     rounded-2xl transition-all duration-200 border backdrop-blur-xl overflow-hidden
