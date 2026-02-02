@@ -39,6 +39,7 @@ const SmartVideoPlayer = ({
     const [showCompletionOverlay, setShowCompletionOverlay] = useState(false);
     const [isSurahCompleted, setIsSurahCompleted] = useState(false);
     const [resumePositions, setResumePositions] = useState<Record<number, number>>({});
+    const [completedLessonIndices, setCompletedLessonIndices] = useState<Set<number>>(new Set());
     const lastSyncTimeRef = useRef<number>(0);
 
     const playIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -107,12 +108,17 @@ const SmartVideoPlayer = ({
     // 2.5 SUPABASE: Fetch Progress & Sync Logic
     const syncProgressToSupabase = async (lessonId: number, position: number, completed: boolean) => {
         if (!session?.keyId) return;
+
+        // Prevent overwriting is_completed: true with false if already completed
+        const isAlreadyCompleted = completedLessonIndices.has(lessonId);
+        const finalCompletedStatus = completed || isAlreadyCompleted;
+
         try {
             const { error } = await supabase.from('student_progress').upsert({
                 student_access_key_id: session.keyId,
                 lesson_id: lessonId,
                 last_position: position,
-                is_completed: completed,
+                is_completed: finalCompletedStatus,
                 updated_at: new Date().toISOString()
             }, { onConflict: 'student_access_key_id, lesson_id' });
 
@@ -132,15 +138,19 @@ const SmartVideoPlayer = ({
 
             if (data && !error) {
                 const positions: Record<number, number> = {};
+                const completedSet = new Set<number>();
+
                 data.forEach(row => {
                     if (row.is_completed) {
                         onLessonCompleted(row.lesson_id);
+                        completedSet.add(row.lesson_id);
                     }
                     if (row.last_position > 0) {
                         positions[row.lesson_id] = row.last_position;
                     }
                 });
                 setResumePositions(positions);
+                setCompletedLessonIndices(completedSet);
             }
         };
         fetchProgress();
@@ -264,12 +274,23 @@ const SmartVideoPlayer = ({
         setIsPlaying(false);
 
         // Check if Last Segment OR Forced Complete
-        if (currentLessonIndex === lessons.length - 1 || forceIsComplete) {
-            setIsSurahCompleted(true);
-            setShowCompletionOverlay(true);
+        const isAlreadyCompleted = completedLessonIndices.has(currentLessonIndex);
+
+        if (!isAlreadyCompleted) {
+            // First time completing logic
+            if (currentLessonIndex === lessons.length - 1 || forceIsComplete) {
+                setIsSurahCompleted(true);
+                setShowCompletionOverlay(true);
+            } else {
+                setIsSurahCompleted(false);
+                setShowCompletionOverlay(true);
+            }
+            // Add to local set immediately to prevent potential race conditions or re-triggers
+            setCompletedLessonIndices(prev => new Set(prev).add(currentLessonIndex));
         } else {
-            setIsSurahCompleted(false);
-            setShowCompletionOverlay(true);
+            // Already completed - Just pause, don't show overlay
+            // We still sync below to ensure 100% position is saved
+            console.log("Lesson already completed, skipping overlay.");
         }
 
         // Sync Completion
@@ -533,7 +554,7 @@ const SmartVideoPlayer = ({
                         return (
                             <button
                                 key={lesson.id}
-                                onClick={() => !lesson.isLocked && handleLessonCardClick(idx)}
+                                onClick={() => (!lesson.isLocked || completedLessonIndices.has(idx)) && handleLessonCardClick(idx)}
                                 className={`
                                     relative group text-left
                                     rounded-2xl transition-all duration-200 border backdrop-blur-xl overflow-hidden
@@ -542,7 +563,7 @@ const SmartVideoPlayer = ({
                                         ? "bg-white/10 border-emerald-500/40 shadow-lg shadow-emerald-500/5 scale-[1.02]"
                                         : "bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20"
                                     }
-                                    ${lesson.isLocked ? "opacity-40 cursor-not-allowed grayscale" : "cursor-pointer"}
+                                    ${(lesson.isLocked && !completedLessonIndices.has(idx)) ? "opacity-40 cursor-not-allowed grayscale" : "cursor-pointer"}
                                 `}
                             >
                                 <div className="p-6 flex flex-row items-center gap-4">
@@ -552,7 +573,7 @@ const SmartVideoPlayer = ({
                                         ${isActive ? "bg-emerald-500 text-black shadow-lg shadow-emerald-500/20" :
                                             isCompleted ? "bg-emerald-500/20 text-emerald-500" : "bg-white/10 text-zinc-400"}
                                     `}>
-                                        {lesson.isLocked ? <Lock className="w-5 h-5" /> :
+                                        {(lesson.isLocked && !completedLessonIndices.has(idx)) ? <Lock className="w-5 h-5" /> :
                                             isActive && isPlaying ? <Pause className="w-6 h-6 fill-current" /> :
                                                 isCompleted ? <CheckCircle2 className="w-6 h-6" /> : <Play className="w-6 h-6 fill-current" />}
                                     </div>
