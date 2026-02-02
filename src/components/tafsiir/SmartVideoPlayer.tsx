@@ -304,7 +304,7 @@ const SmartVideoPlayer = ({
                 {/* C. COMPLETION OVERLAY - z-[60] to be strictly on top */}
                 {showCompletionOverlay && (
                     <div className="absolute inset-0 z-[60] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-zinc-950 to-zinc-950 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-500">
-                        <div className="bg-zinc-950/40 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-12 shadow-2xl shadow-emerald-950/20 max-w-lg w-full transform transition-all hover:scale-[1.02]">
+                        <div className="bg-zinc-950/40 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-6 md:p-12 shadow-2xl shadow-emerald-950/20 w-[92%] max-w-md md:max-w-lg transform transition-all hover:scale-[1.02]">
                             {isSurahCompleted ? (
                                 <div className="flex flex-col items-center text-center">
                                     <div className="relative inline-flex mb-8">
@@ -312,7 +312,7 @@ const SmartVideoPlayer = ({
                                         <CheckCircle2 className="relative w-24 h-24 text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)] shadow-[0_0_50px_rgba(16,185,129,0.3)] rounded-full bg-black/20" />
                                     </div>
 
-                                    <h3 className="text-3xl font-bold text-white mt-8 tracking-tight">Casharka Waa Dhamaaday!</h3>
+                                    <h3 className="text-2xl md:text-3xl font-bold text-white mt-8 tracking-tight">Casharka Waa Dhamaaday!</h3>
                                     <p className="text-zinc-300/80 text-lg mt-3 mb-12 font-medium leading-relaxed">Alhamdulillah, waxaad dhamaysatay tafsiirka suuradan.</p>
 
                                     <a
@@ -327,10 +327,10 @@ const SmartVideoPlayer = ({
                                 </div>
                             ) : (
                                 <div className="space-y-6">
-                                    <h3 className="text-2xl font-bold text-white">Qaybtan Waa Dhamaatay</h3>
+                                    <h3 className="text-2xl md:text-3xl font-bold text-white">Qaybtan Waa Dhamaatay</h3>
                                     <button
                                         onClick={handleContinue}
-                                        className="w-full px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl transition-all transform hover:scale-105 shadow-xl shadow-emerald-500/20"
+                                        className="w-full px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl transition-all transform hover:scale-105 shadow-xl shadow-emerald-500/20 z-50"
                                     >
                                         Sii Wada Casharka
                                     </button>
