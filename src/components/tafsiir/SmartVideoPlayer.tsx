@@ -413,7 +413,7 @@ const SmartVideoPlayer = ({
                                     <p className="text-zinc-400 text-sm mb-8 leading-relaxed">Alhamdulillah, waxaad dhamaysatay tafsiirka suuradan.</p>
 
                                     <a
-                                        href="https://wa.me/632441316?text=Assalamu%20alaykum%20Macalin,%20waxaan%20si%20guul%20leh%20u%20dhameeyay%20Tafsiirka%20Surah%20Al-Fatiha."
+                                        href="https://wa.me/252572441316?text=Assalamu%20alaykum%20Macalin,%20waxaan%20si%20guul%20leh%20u%20dhameeyay%20Tafsiirka%20Surah%20Al-Fatiha."
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex items-center justify-center gap-2 w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl text-white font-bold hover:scale-[1.02] transition-transform shadow-lg"
