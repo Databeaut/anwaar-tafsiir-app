@@ -36,6 +36,7 @@ const SmartVideoPlayer = ({
     const [isSurahCompleted, setIsSurahCompleted] = useState(false);
 
     const playIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     // 1. The Brain: Dynamic Segmentation
     useEffect(() => {
@@ -261,6 +262,14 @@ const SmartVideoPlayer = ({
         }
     };
 
+    const toggleFullScreen = () => {
+        if (!document.fullscreenElement) {
+            containerRef.current?.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) document.exitFullscreen();
+        }
+    };
+
     if (lessons.length === 0) return null;
 
     return (
@@ -271,7 +280,7 @@ const SmartVideoPlayer = ({
             </h1>
 
             {/* 1. LARGE MAIN PLAYER - FIXED CONTAINER - Force Order 2 on Mobile */}
-            <div className="relative w-full aspect-video min-h-[250px] bg-transparent rounded-3xl overflow-hidden shadow-2xl shadow-emerald-900/20 border border-white/5 ring-1 ring-white/5 group/player order-2">
+            <div ref={containerRef} className="relative w-full aspect-video min-h-[250px] bg-transparent rounded-3xl overflow-hidden shadow-2xl shadow-emerald-900/20 border border-white/5 ring-1 ring-white/5 group/player order-2">
 
                 {/* A. THE FRAME (CONTAINED MASK) */}
                 <div className="absolute inset-0 flex items-center justify-center z-0">
@@ -408,6 +417,9 @@ const SmartVideoPlayer = ({
                                 <div className="hidden sm:block text-xs font-bold text-emerald-50 tracking-wide uppercase px-3 py-1 rounded-lg bg-black/60 backdrop-blur-sm border border-white/5">
                                     {lessons[currentLessonIndex]?.title}
                                 </div>
+                                <button onClick={toggleFullScreen} className="text-white hover:text-emerald-400 transition-colors transform hover:scale-105 active:scale-95">
+                                    <Maximize className="w-4 h-4 md:w-5 md:h-5" />
+                                </button>
                             </div>
                         </div>
                     </div>
