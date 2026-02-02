@@ -2,15 +2,15 @@ import { ArrowDown, Sparkles, Star } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 
 // Animated Counter Component
-const AnimatedCounter = ({ 
-  end, 
-  suffix = "", 
-  decimals = 0, 
-  duration = 2000 
-}: { 
-  end: number; 
-  suffix?: string; 
-  decimals?: number; 
+const AnimatedCounter = ({
+  end,
+  suffix = "",
+  decimals = 0,
+  duration = 2000
+}: {
+  end: number;
+  suffix?: string;
+  decimals?: number;
   duration?: number;
 }) => {
   const [count, setCount] = useState(0);
@@ -23,22 +23,22 @@ const AnimatedCounter = ({
         if (entries[0].isIntersecting && !hasAnimated) {
           setHasAnimated(true);
           const startTime = performance.now();
-          
+
           const animate = (currentTime: number) => {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            
+
             // Ease-out cubic for smooth deceleration
             const easeOut = 1 - Math.pow(1 - progress, 3);
             const currentValue = easeOut * end;
-            
+
             setCount(currentValue);
-            
+
             if (progress < 1) {
               requestAnimationFrame(animate);
             }
           };
-          
+
           requestAnimationFrame(animate);
         }
       },
@@ -65,7 +65,7 @@ const HeroSection = () => {
 
   const handleClick = () => {
     setIsAnimating(false);
-    document.getElementById('login-section')?.scrollIntoView({ 
+    document.getElementById('login-section')?.scrollIntoView({
       behavior: 'smooth',
       block: 'center'
     });
@@ -77,7 +77,7 @@ const HeroSection = () => {
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 text-emerald-400 text-sm font-medium border border-emerald-500/20 mb-8 animate-fade-in">
           <Sparkles className="w-4 h-4" />
-          <span>Bilaash oo Sahlan</span>
+          <span>Fudud oo gaaban</span>
         </div>
 
         {/* Headline */}
@@ -101,7 +101,7 @@ const HeroSection = () => {
         <div className="animate-fade-in" style={{
           animationDelay: "0.3s"
         }}>
-          <button 
+          <button
             onClick={handleClick}
             className={`btn-hero ${isAnimating ? 'animate-cta-bounce' : 'glow-emerald'}`}
           >

@@ -337,7 +337,7 @@ const SmartVideoPlayer = ({
                 {/* C. COMPLETION OVERLAY - Fixed Modal for Mobile Responsiveness */}
                 {showCompletionOverlay && (
                     <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center p-4 animate-in fade-in duration-300">
-                        <div className="bg-zinc-950 border border-white/10 rounded-3xl p-6 w-[92%] max-w-sm shadow-2xl shadow-emerald-900/20 transform transition-all">
+                        <div className="bg-zinc-950 border border-white/10 rounded-3xl p-6 w-[90%] max-w-sm shadow-2xl shadow-emerald-900/20 transform transition-all">
                             {isSurahCompleted ? (
                                 <div className="flex flex-col items-center text-center">
                                     <div className="relative inline-flex mb-6">
@@ -345,7 +345,7 @@ const SmartVideoPlayer = ({
                                         <CheckCircle2 className="relative w-16 h-16 text-emerald-500 drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
                                     </div>
 
-                                    <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">Casharka Waa Dhamaaday!</h3>
+                                    <h3 className="text-xl font-bold text-white mb-2 tracking-tight">Casharka Waa Dhamaaday!</h3>
                                     <p className="text-zinc-400 text-sm mb-8 leading-relaxed">Alhamdulillah, waxaad dhamaysatay tafsiirka suuradan.</p>
 
                                     <a
