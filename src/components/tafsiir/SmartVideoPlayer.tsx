@@ -9,6 +9,9 @@ declare global {
     }
 }
 
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+
 interface SmartVideoPlayerProps {
     onLessonsReady: (lessons: Lesson[]) => void;
     onLessonChange: (index: number) => void;
@@ -24,6 +27,7 @@ const SmartVideoPlayer = ({
     currentLessonIndex,
     lessons,
 }: SmartVideoPlayerProps) => {
+    const { session } = useAuth();
     const [player, setPlayer] = useState<any>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
@@ -34,6 +38,8 @@ const SmartVideoPlayer = ({
     // COMPLETION STATE
     const [showCompletionOverlay, setShowCompletionOverlay] = useState(false);
     const [isSurahCompleted, setIsSurahCompleted] = useState(false);
+    const [resumePositions, setResumePositions] = useState<Record<number, number>>({});
+    const lastSyncTimeRef = useRef<number>(0);
 
     const playIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -98,6 +104,48 @@ const SmartVideoPlayer = ({
         }
     }, []);
 
+    // 2.5 SUPABASE: Fetch Progress & Sync Logic
+    const syncProgressToSupabase = async (lessonId: number, position: number, completed: boolean) => {
+        if (!session?.keyId) return;
+        try {
+            const { error } = await supabase.from('student_progress').upsert({
+                student_access_key_id: session.keyId,
+                lesson_id: lessonId,
+                last_position: position,
+                is_completed: completed,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'student_access_key_id, lesson_id' });
+
+            if (error) console.error("Sync Error:", error);
+        } catch (err) {
+            console.error("Sync Exception:", err);
+        }
+    };
+
+    useEffect(() => {
+        const fetchProgress = async () => {
+            if (!session?.keyId) return;
+            const { data, error } = await supabase
+                .from('student_progress')
+                .select('lesson_id, last_position, is_completed')
+                .eq('student_access_key_id', session.keyId);
+
+            if (data && !error) {
+                const positions: Record<number, number> = {};
+                data.forEach(row => {
+                    if (row.is_completed) {
+                        onLessonCompleted(row.lesson_id);
+                    }
+                    if (row.last_position > 0) {
+                        positions[row.lesson_id] = row.last_position;
+                    }
+                });
+                setResumePositions(positions);
+            }
+        };
+        fetchProgress();
+    }, [session?.keyId]);
+
     // 3. The Engine: Custom Shell Player
     useEffect(() => {
         // Cleanup
@@ -152,19 +200,32 @@ const SmartVideoPlayer = ({
                             }
                         },
                         onReady: (event: any) => {
-                            // Correctly set initial time
-                            setCurrentTime(0);
+                            // Resume from Saved Position
+                            if (resumePositions[currentLessonIndex] && resumePositions[currentLessonIndex] > 5) {
+                                const seekAbs = currentLesson.startTime + resumePositions[currentLessonIndex];
+                                event.target.seekTo(seekAbs, true);
+                                console.log("Resuming at:", resumePositions[currentLessonIndex]);
+                            } else {
+                                setCurrentTime(0);
+                            }
                         }
                     },
                 });
                 setPlayer(newPlayer);
 
-                // 4. Custom Polling Loop
+                // 4. Custom Polling Loop & Sync
                 playIntervalRef.current = setInterval(() => {
                     if (newPlayer && newPlayer.getCurrentTime) {
                         const rawTime = newPlayer.getCurrentTime();
                         const relTime = Math.max(0, rawTime - currentLesson.startTime);
                         setCurrentTime(relTime);
+
+                        // SYNC TO SUPABASE (Every 30s)
+                        const now = Date.now();
+                        if (now - lastSyncTimeRef.current > 30000 && isPlaying && session?.keyId) {
+                            syncProgressToSupabase(currentLessonIndex, Math.floor(relTime), false);
+                            lastSyncTimeRef.current = now;
+                        }
 
                         // AYAH TRACKING BRAIN
                         const activeAyah = ayahSegments.find(a => rawTime >= a.startTime && rawTime < a.endTime);
@@ -210,6 +271,9 @@ const SmartVideoPlayer = ({
             setIsSurahCompleted(false);
             setShowCompletionOverlay(true);
         }
+
+        // Sync Completion
+        syncProgressToSupabase(currentLessonIndex, duration, true);
     };
 
     const handleContinue = () => {
