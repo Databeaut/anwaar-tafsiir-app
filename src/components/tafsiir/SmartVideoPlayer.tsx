@@ -266,25 +266,25 @@ const SmartVideoPlayer = ({
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-4 md:p-6 space-y-8 flex flex-col">
             {/* 0. HEADER TITLE - Mobile Responsive */}
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-semibold text-center mb-4 md:mb-8 font-arabic bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent drop-shadow-sm order-1">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-semibold text-center mb-4 md:mb-8 mt-4 font-arabic bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent drop-shadow-sm order-1">
                 سورة الفاتحة
             </h1>
 
             {/* 1. LARGE MAIN PLAYER - FIXED CONTAINER - Force Order 2 on Mobile */}
-            <div className="relative w-full aspect-video min-h-[250px] bg-black rounded-3xl overflow-hidden shadow-2xl shadow-emerald-900/20 border border-white/5 ring-1 ring-white/5 group/player order-2">
+            <div className="relative w-full aspect-video min-h-[250px] bg-transparent rounded-3xl overflow-hidden shadow-2xl shadow-emerald-900/20 border border-white/5 ring-1 ring-white/5 group/player order-2">
 
                 {/* A. THE FRAME (CONTAINED MASK) */}
-                <div className="absolute inset-0 flex items-center justify-center z-10">
+                <div className="absolute inset-0 flex items-center justify-center z-0">
                     <img
                         src="/quran-frame.jpg"
                         alt="Quran Frame"
-                        className="w-full h-full object-contain select-none pointer-events-none"
+                        className="w-full h-full object-cover select-none pointer-events-none"
                     />
                 </div>
 
                 {/* AYAH DISPLAY OVERLAY - Mobile Optimized */}
                 <div
-                    className={`absolute inset-0 flex justify-center items-center z-30 pointer-events-none transition-opacity duration-700 ease-in-out ${currentAyahText ? 'opacity-100' : 'opacity-0'}`}
+                    className={`absolute inset-0 flex justify-center items-center z-10 pointer-events-none transition-opacity duration-700 ease-in-out ${currentAyahText ? 'opacity-100' : 'opacity-0'}`}
                 >
                     <div className="bg-black/50 px-4 py-3 md:px-8 md:py-6 rounded-full backdrop-blur-md border border-white/10 shadow-2xl max-w-[85%] md:max-w-[80%] text-center transform transition-transform duration-700 hover:scale-105 mt-2 md:mt-0">
                         <p
