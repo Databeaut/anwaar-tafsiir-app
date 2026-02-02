@@ -220,9 +220,9 @@ const SmartVideoPlayer = ({
                         const relTime = Math.max(0, rawTime - currentLesson.startTime);
                         setCurrentTime(relTime);
 
-                        // SYNC TO SUPABASE (Every 30s)
+                        // SYNC TO SUPABASE (Every 15s)
                         const now = Date.now();
-                        if (now - lastSyncTimeRef.current > 30000 && isPlaying && session?.keyId) {
+                        if (now - lastSyncTimeRef.current > 15000 && isPlaying && session?.keyId) {
                             syncProgressToSupabase(currentLessonIndex, Math.floor(relTime), false);
                             lastSyncTimeRef.current = now;
                         }

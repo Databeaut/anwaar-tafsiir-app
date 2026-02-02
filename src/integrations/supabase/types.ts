@@ -60,6 +60,41 @@ export interface Database {
         }
         Relationships: []
       }
+      student_progress: {
+        Row: {
+          id: string
+          student_access_key_id: string
+          lesson_id: number
+          last_position: number
+          is_completed: boolean
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          student_access_key_id: string
+          lesson_id: number
+          last_position?: number
+          is_completed?: boolean
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          student_access_key_id?: string
+          lesson_id?: number
+          last_position?: number
+          is_completed?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_progress_student_access_key_id_fkey"
+            columns: ["student_access_key_id"]
+            isOneToOne: false
+            referencedRelation: "access_keys"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       user_roles: {
         Row: {
           id: string
