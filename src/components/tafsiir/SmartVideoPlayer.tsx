@@ -271,7 +271,7 @@ const SmartVideoPlayer = ({
             </h1>
 
             {/* 1. LARGE MAIN PLAYER - FIXED CONTAINER - Force Order 2 on Mobile */}
-            <div className="relative w-full aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl shadow-emerald-900/20 border border-white/5 ring-1 ring-white/5 group/player order-2">
+            <div className="relative w-full aspect-video min-h-[250px] bg-black rounded-3xl overflow-hidden shadow-2xl shadow-emerald-900/20 border border-white/5 ring-1 ring-white/5 group/player order-2">
 
                 {/* A. THE FRAME (CONTAINED MASK) */}
                 <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -301,9 +301,9 @@ const SmartVideoPlayer = ({
                     <div id="yt-main-player" className="w-full h-full" />
                 </div>
 
-                {/* C. COMPLETION OVERLAY */}
+                {/* C. COMPLETION OVERLAY - z-[60] to be strictly on top */}
                 {showCompletionOverlay && (
-                    <div className="absolute inset-0 z-50 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-zinc-950 to-zinc-950 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-500">
+                    <div className="absolute inset-0 z-[60] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-zinc-950 to-zinc-950 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-500">
                         <div className="bg-zinc-950/40 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-12 shadow-2xl shadow-emerald-950/20 max-w-lg w-full transform transition-all hover:scale-[1.02]">
                             {isSurahCompleted ? (
                                 <div className="flex flex-col items-center text-center">
@@ -340,9 +340,9 @@ const SmartVideoPlayer = ({
                     </div>
                 )}
 
-                {/* D. INTERACTIVE OVERLAY CONTROLS */}
+                {/* D. INTERACTIVE OVERLAY CONTROLS - z-50 to be above Ayah (z-30) */}
                 {/* Sits on top of the frame (z-20) */}
-                <div className={`absolute inset-0 z-35 flex flex-col justify-between transition-opacity duration-300 ${isPlaying ? "opacity-0 hover:opacity-100" : "opacity-100"}`}>
+                <div className={`absolute inset-0 z-50 flex flex-col justify-between transition-opacity duration-300 ${isPlaying ? "opacity-0 hover:opacity-100" : "opacity-100"}`}>
 
                     {/* Big Center Play Button (Only when paused) */}
                     {!isPlaying && !showCompletionOverlay && (
