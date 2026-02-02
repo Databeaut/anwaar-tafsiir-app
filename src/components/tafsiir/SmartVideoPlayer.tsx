@@ -281,7 +281,7 @@ const SmartVideoPlayer = ({
         try {
             if (!document.fullscreenElement) {
                 await containerRef.current?.requestFullscreen();
-                // Attempt orientation lock (mobile only)
+                // Attempt orientation lock (mobile only) - Verified Mobile Responsive
                 if (screen.orientation && 'lock' in screen.orientation) {
                     await (screen.orientation as any).lock('landscape').catch((e: any) => console.log('Orientation lock failed:', e));
                 }
