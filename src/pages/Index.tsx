@@ -63,7 +63,7 @@ const Index = () => {
     return (
       <div className="min-h-screen bg-[#0f0f0f] relative overflow-x-hidden">
         <FloatingDecorations />
-        <Navbar />
+        <Navbar currentSurahId={1} />
 
         <main className="relative z-10">
           {/* Video Player Section */}
@@ -75,6 +75,7 @@ const Index = () => {
             currentLessonIndex={currentLessonIndex}
 
             lessons={lessons}
+            surahId={1}
           />
 
           {/* Surah Details Card */}

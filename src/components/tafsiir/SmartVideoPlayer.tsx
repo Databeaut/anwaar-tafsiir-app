@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { type Lesson, formatTime, ayahSegments } from "./surahData";
+import { type Lesson, formatTime } from "./surahData";
 import { surahManifest } from "@/data/surah-manifest";
 import { Play, Pause, Lock, CheckCircle2, RotateCcw, Volume2, VolumeX, Maximize } from "lucide-react";
 
@@ -19,6 +19,7 @@ interface SmartVideoPlayerProps {
     onLessonCompleted: (index: number) => void;
     currentLessonIndex: number;
     lessons: Lesson[];
+    surahId?: number;
 }
 
 const SmartVideoPlayer = ({
@@ -27,6 +28,7 @@ const SmartVideoPlayer = ({
     onLessonCompleted,
     currentLessonIndex,
     lessons,
+    surahId
 }: SmartVideoPlayerProps) => {
     const { session } = useAuth();
     const [player, setPlayer] = useState<any>(null);
@@ -43,6 +45,10 @@ const SmartVideoPlayer = ({
     const [completedLessonIds, setCompletedLessonIds] = useState<Set<number>>(new Set());
     const [isLoadingProgress, setIsLoadingProgress] = useState(true); // Optimization: Wait for DB
 
+    // NEW: Active Ayahs State
+    const [activeAyahs, setActiveAyahs] = useState<any[]>([]);
+    const [surahNameArabic, setSurahNameArabic] = useState<string>("سورة الفاتحة");
+
     const lastSyncTimeRef = useRef<number>(0);
 
     const playIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -50,12 +56,21 @@ const SmartVideoPlayer = ({
 
     // 1. The Brain: Content-Driven Manifest Loading
     useEffect(() => {
-        if (lessons.length === 0) {
-            console.log("SmartVideoPlayer: Loading Surah Manifest...");
-            // Defaulting to Surah 1 (Al-Fatiha) for now
-            const activeSurah = surahManifest.find(s => s.id === 1);
+        // If external lessons provided, use them, but we still need Ayahs.
+        // If no lessons, load from manifest based on Surah ID.
+        console.log("SmartVideoPlayer: Loading Surah Manifest for ID:", surahId);
 
-            if (activeSurah) {
+        const targetSurahId = surahId || 1;
+        const activeSurah = surahManifest.find(s => s.id === targetSurahId);
+
+        if (activeSurah) {
+            // Set Ayahs
+            setActiveAyahs(activeSurah.ayahs || []);
+            setSurahNameArabic(activeSurah.nameArabic);
+
+            // Only map lessons if not already provided (or if we want to enforce manifest)
+            // The logic at line 53 `if (lessons.length === 0)` suggests we populate if empty.
+            if (lessons.length === 0) {
                 const mappedLessons: Lesson[] = activeSurah.lessons.map(l => ({
                     id: l.id,
                     title: l.title,
@@ -69,7 +84,7 @@ const SmartVideoPlayer = ({
                 onLessonsReady(mappedLessons);
             }
         }
-    }, []);
+    }, [surahId]); // Re-run if surahId changes
 
     // 2. Load YouTube API
     useEffect(() => {
@@ -106,14 +121,13 @@ const SmartVideoPlayer = ({
 
     useEffect(() => {
         const fetchProgress = async () => {
-            if (!session?.keyId) {
-                setIsLoadingProgress(false); // No session, just load
+            if (!session?.keyId || lessons.length === 0) {
+                if (!session?.keyId) setIsLoadingProgress(false);
                 return;
             }
 
-            // SCOPED FETCH: Only fetch lessons for the Active Surah (ID 1)
-            // In a real app, pass surahId as prop. Hardcoded to [0, 1] for Al-Fatiha for now.
-            const activeLessonIds = [0, 1];
+            // SCOPED FETCH: Dynamic based on loaded lessons
+            const activeLessonIds = lessons.map(l => l.id);
 
             const { data, error } = await supabase
                 .from('student_progress')
@@ -140,7 +154,7 @@ const SmartVideoPlayer = ({
             setIsLoadingProgress(false); // Logic release
         };
         fetchProgress();
-    }, [session?.keyId]);
+    }, [session?.keyId, lessons]); // Re-run when lessons are loaded
 
     // 3. The Engine: Native Trimming Player
     useEffect(() => {
@@ -157,6 +171,8 @@ const SmartVideoPlayer = ({
 
         // Lock: Do not load player until DB progress is ready
         if (isLoadingProgress) return;
+
+        // Wait for Ayahs too? No, mostly visual.
 
         const currentLesson = lessons[currentLessonIndex];
         if (!currentLesson) return;
@@ -177,7 +193,7 @@ const SmartVideoPlayer = ({
                 // CRITICAL: Native Youtube Trimming
                 const playerVars = {
                     start: currentLesson.startTime,
-                    end: currentLesson.endTime, // Use HardStop from manifest (mapped to endTime)
+                    end: currentLesson.endTime, // Use HardStop from manifest
                     controls: 0,
                     modestbranding: 1,
                     disablekb: 1,
@@ -233,8 +249,8 @@ const SmartVideoPlayer = ({
                             lastSyncTimeRef.current = now;
                         }
 
-                        // AYAH TRACKING BRAIN
-                        const activeAyah = ayahSegments.find(a => rawTime >= a.startTime && rawTime < a.endTime);
+                        // AYAH TRACKING BRAIN - Dynamic from State
+                        const activeAyah = activeAyahs.find(a => rawTime >= a.startTime && rawTime < a.endTime);
                         setCurrentAyahText(activeAyah ? activeAyah.text : null);
 
                         // Fallback Kill-Switch (Redundant safety net)
@@ -256,7 +272,7 @@ const SmartVideoPlayer = ({
         return () => {
             if (playIntervalRef.current) clearInterval(playIntervalRef.current);
         };
-    }, [currentLessonIndex, lessons, isLoadingProgress]);
+    }, [currentLessonIndex, lessons, isLoadingProgress, activeAyahs]);
 
     // LOGIC: Handle End of Segment (Conditional Overlay)
     const handleSegmentEnd = (activePlayer: any, forceIsComplete = false) => {
@@ -384,7 +400,7 @@ const SmartVideoPlayer = ({
         <div className="w-full max-w-7xl mx-auto px-4 py-4 md:p-6 space-y-8 flex flex-col">
             {/* 0. HEADER TITLE - Mobile Responsive */}
             <h1 className="text-2xl sm:text-4xl md:text-5xl font-semibold text-center mb-4 md:mb-8 mt-4 font-arabic bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent drop-shadow-sm order-1">
-                سورة الفاتحة
+                {surahNameArabic}
             </h1>
 
             {/* 1. LARGE MAIN PLAYER - FIXED CONTAINER - Force Order 2 on Mobile */}

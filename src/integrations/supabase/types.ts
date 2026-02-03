@@ -95,6 +95,38 @@ export interface Database {
           }
         ]
       }
+      student_surah_access: {
+        Row: {
+          id: string
+          student_key_id: string
+          surah_id: number
+          is_unlocked: boolean
+          unlocked_at: string
+        }
+        Insert: {
+          id?: string
+          student_key_id: string
+          surah_id: number
+          is_unlocked?: boolean
+          unlocked_at?: string
+        }
+        Update: {
+          id?: string
+          student_key_id?: string
+          surah_id?: number
+          is_unlocked?: boolean
+          unlocked_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_surah_access_student_key_id_fkey"
+            columns: ["student_key_id"]
+            isOneToOne: false
+            referencedRelation: "access_keys"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -126,7 +158,10 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_admin_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "user"
