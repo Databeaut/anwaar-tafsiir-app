@@ -174,6 +174,15 @@ const SmartVideoPlayer = ({
         if (!currentLesson) return;
 
         setDuration(currentLesson.endTime - currentLesson.startTime);
+
+        // 1. Duration Override Logic (Rescale video timeline)
+        // For Part 2 (Index 1), force duration to 337s (5:37) to hide the outro from UI
+        let effectiveDuration = currentLesson.endTime - currentLesson.startTime;
+        if (currentLessonIndex === 1) {
+            effectiveDuration = 337;
+        }
+        setDuration(effectiveDuration);
+
         const playerContainerId = "yt-main-player";
 
         const initPlayer = () => {
@@ -319,7 +328,11 @@ const SmartVideoPlayer = ({
 
     const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!player || !lessons[currentLessonIndex]) return;
-        const seekTime = parseFloat(e.target.value);
+        let seekTime = parseFloat(e.target.value);
+
+        // Constraint: cannot seek higher than effectiveDuration
+        if (seekTime > duration) seekTime = duration;
+
         const absSeekTime = lessons[currentLessonIndex].startTime + seekTime;
         player.seekTo(absSeekTime, true);
         setCurrentTime(seekTime);
