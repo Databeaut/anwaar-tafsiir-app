@@ -312,6 +312,18 @@ const SmartVideoPlayer = ({
             player.pauseVideo();
             setIsPlaying(false);
         } else {
+            // Check if we need to restart a completed lesson
+            // If lesson is complete AND we are essentially at the end or hard stop
+            const isAtHardStop = currentLessonIndex === 1 && currentTime >= 337;
+            const isAtEnd = currentTime >= duration - 1;
+
+            if (completedLessonIds.has(currentLessonIndex) && (isAtEnd || isAtHardStop)) {
+                const absStartTime = lessons[currentLessonIndex].startTime;
+                player.seekTo(absStartTime, true);
+                setCurrentTime(0);
+                setShowCompletionOverlay(false); // Ensure overlay is hidden
+            }
+
             player.playVideo();
             setIsPlaying(true);
         }
