@@ -39,7 +39,8 @@ const SmartVideoPlayer = ({
     const [showCompletionOverlay, setShowCompletionOverlay] = useState(false);
     const [isSurahCompleted, setIsSurahCompleted] = useState(false);
     const [resumePositions, setResumePositions] = useState<Record<number, number>>({});
-    const [completedLessonIndices, setCompletedLessonIndices] = useState<Set<number>>(new Set());
+    const [completedLessonIds, setCompletedLessonIds] = useState<Set<number>>(new Set());
+
     const lastSyncTimeRef = useRef<number>(0);
 
     const playIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -110,7 +111,7 @@ const SmartVideoPlayer = ({
         if (!session?.keyId) return;
 
         // Prevent overwriting is_completed: true with false if already completed
-        const isAlreadyCompleted = completedLessonIndices.has(lessonId);
+        const isAlreadyCompleted = completedLessonIds.has(lessonId);
         const finalCompletedStatus = completed || isAlreadyCompleted;
 
         try {
@@ -150,7 +151,7 @@ const SmartVideoPlayer = ({
                     }
                 });
                 setResumePositions(positions);
-                setCompletedLessonIndices(completedSet);
+                setCompletedLessonIds(completedSet);
             }
         };
         fetchProgress();
@@ -210,8 +211,10 @@ const SmartVideoPlayer = ({
                             }
                         },
                         onReady: (event: any) => {
-                            // Resume from Saved Position
-                            if (resumePositions[currentLessonIndex] && resumePositions[currentLessonIndex] > 5) {
+                            // Resume from Saved Position (ONLY if not completed)
+                            const isLessonCompleted = completedLessonIds.has(currentLessonIndex);
+
+                            if (!isLessonCompleted && resumePositions[currentLessonIndex] && resumePositions[currentLessonIndex] > 5) {
                                 const seekAbs = currentLesson.startTime + resumePositions[currentLessonIndex];
                                 event.target.seekTo(seekAbs, true);
                                 console.log("Resuming at:", resumePositions[currentLessonIndex]);
@@ -274,24 +277,17 @@ const SmartVideoPlayer = ({
         setIsPlaying(false);
 
         // Check if Last Segment OR Forced Complete
-        const isAlreadyCompleted = completedLessonIndices.has(currentLessonIndex);
-
-        if (!isAlreadyCompleted) {
-            // First time completing logic
-            if (currentLessonIndex === lessons.length - 1 || forceIsComplete) {
-                setIsSurahCompleted(true);
-                setShowCompletionOverlay(true);
-            } else {
-                setIsSurahCompleted(false);
-                setShowCompletionOverlay(true);
-            }
-            // Add to local set immediately to prevent potential race conditions or re-triggers
-            setCompletedLessonIndices(prev => new Set(prev).add(currentLessonIndex));
+        // Always show completion modal (even for re-entry)
+        if (currentLessonIndex === lessons.length - 1 || forceIsComplete) {
+            setIsSurahCompleted(true);
+            setShowCompletionOverlay(true);
         } else {
-            // Already completed - Just pause, don't show overlay
-            // We still sync below to ensure 100% position is saved
-            console.log("Lesson already completed, skipping overlay.");
+            setIsSurahCompleted(false);
+            setShowCompletionOverlay(true);
         }
+
+        // Add to local set immediately to prevent potential race conditions or re-triggers
+        setCompletedLessonIds(prev => new Set(prev).add(currentLessonIndex));
 
         // Sync Completion
         syncProgressToSupabase(currentLessonIndex, duration, true);
@@ -549,12 +545,13 @@ const SmartVideoPlayer = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {lessons.map((lesson, idx) => {
                         const isActive = idx === currentLessonIndex;
-                        const isCompleted = !lesson.isLocked && idx < currentLessonIndex;
+                        const isCompleted = completedLessonIds.has(idx) || (!lesson.isLocked && idx < currentLessonIndex);
+                        const isActuallyLocked = lesson.isLocked && !isCompleted;
 
                         return (
                             <button
                                 key={lesson.id}
-                                onClick={() => (!lesson.isLocked || completedLessonIndices.has(idx)) && handleLessonCardClick(idx)}
+                                onClick={() => !isActuallyLocked && handleLessonCardClick(idx)}
                                 className={`
                                     relative group text-left
                                     rounded-2xl transition-all duration-200 border backdrop-blur-xl overflow-hidden
@@ -563,7 +560,7 @@ const SmartVideoPlayer = ({
                                         ? "bg-white/10 border-emerald-500/40 shadow-lg shadow-emerald-500/5 scale-[1.02]"
                                         : "bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20"
                                     }
-                                    ${(lesson.isLocked && !completedLessonIndices.has(idx)) ? "opacity-40 cursor-not-allowed grayscale" : "cursor-pointer"}
+                                    ${isActuallyLocked ? "opacity-40 cursor-not-allowed grayscale" : "cursor-pointer"}
                                 `}
                             >
                                 <div className="p-6 flex flex-row items-center gap-4">
@@ -573,7 +570,7 @@ const SmartVideoPlayer = ({
                                         ${isActive ? "bg-emerald-500 text-black shadow-lg shadow-emerald-500/20" :
                                             isCompleted ? "bg-emerald-500/20 text-emerald-500" : "bg-white/10 text-zinc-400"}
                                     `}>
-                                        {(lesson.isLocked && !completedLessonIndices.has(idx)) ? <Lock className="w-5 h-5" /> :
+                                        {isActuallyLocked ? <Lock className="w-5 h-5" /> :
                                             isActive && isPlaying ? <Pause className="w-6 h-6 fill-current" /> :
                                                 isCompleted ? <CheckCircle2 className="w-6 h-6" /> : <Play className="w-6 h-6 fill-current" />}
                                     </div>
