@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { type Lesson, courseConfig, formatTime, ayahSegments } from "./surahData";
+import { type Lesson, formatTime, ayahSegments } from "./surahData";
+import { surahManifest } from "@/data/surah-manifest";
 import { Play, Pause, Lock, CheckCircle2, RotateCcw, Volume2, VolumeX, Maximize } from "lucide-react";
 
 declare global {
@@ -47,53 +48,26 @@ const SmartVideoPlayer = ({
     const playIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // 1. The Brain: Dynamic Segmentation
+    // 1. The Brain: Content-Driven Manifest Loading
     useEffect(() => {
         if (lessons.length === 0) {
-            console.log("SmartVideoPlayer: Generating Custom Shell Segments...");
-            const { totalDuration, videoId } = courseConfig;
-            const generatedLessons: Lesson[] = [];
+            console.log("SmartVideoPlayer: Loading Surah Manifest...");
+            // Defaulting to Surah 1 (Al-Fatiha) for now
+            const activeSurah = surahManifest.find(s => s.id === 1);
 
-            const SEGMENT_SIZE = 300; // 5 minutes standard
-            let currentTime = 0;
-            let partNumber = 1;
-
-            while (currentTime < totalDuration) {
-                let endTime = currentTime + SEGMENT_SIZE;
-
-                // Remainder Logic: If remaining time is less than a full segment, merge it.
-                if (totalDuration - endTime < SEGMENT_SIZE) {
-                    endTime = totalDuration;
-                }
-
-                // Determine Titles based on part number
-                let title = `Qaybta ${partNumber}aad`;
-                let subtitle = "Daawashada Casharka";
-
-                if (currentTime === 0 && endTime === totalDuration) {
-                    title = "Casharka oo Dhamaystiran"; // Single segment case
-                    subtitle = "Daawo";
-                } else if (partNumber === 1) {
-                    subtitle = "Hordhaca & Akhriska";
-                } else if (endTime === totalDuration) {
-                    subtitle = "Dhamaystirka & Tafsiirka";
-                }
-
-                generatedLessons.push({
-                    id: partNumber,
-                    title: title,
-                    subtitle: subtitle,
-                    videoId: videoId,
-                    startTime: currentTime,
-                    endTime: endTime,
-                    isLocked: partNumber !== 1, // Only first part unlocked initially
-                    duration: formatTime(endTime - currentTime)
-                });
-
-                currentTime = endTime;
-                partNumber++;
+            if (activeSurah) {
+                const mappedLessons: Lesson[] = activeSurah.lessons.map(l => ({
+                    id: l.id,
+                    title: l.title,
+                    subtitle: l.subtitle,
+                    videoId: l.videoId,
+                    startTime: l.timestamps.start,
+                    endTime: l.timestamps.hardStop || l.timestamps.end, // Use hardStop as effective end
+                    isLocked: l.isLockedByDefault,
+                    duration: l.durationFormatted
+                }));
+                onLessonsReady(mappedLessons);
             }
-            onLessonsReady(generatedLessons);
         }
     }, []);
 
@@ -107,7 +81,7 @@ const SmartVideoPlayer = ({
         }
     }, []);
 
-    // 2.5 SUPABASE: Fetch Progress & Sync Logic
+    // 2.5 SUPABASE: Fetch Progress & Sync Logic (Scoped)
     const syncProgressToSupabase = async (lessonId: number, position: number, completed: boolean) => {
         if (!session?.keyId) return;
 
@@ -136,10 +110,16 @@ const SmartVideoPlayer = ({
                 setIsLoadingProgress(false); // No session, just load
                 return;
             }
+
+            // SCOPED FETCH: Only fetch lessons for the Active Surah (ID 1)
+            // In a real app, pass surahId as prop. Hardcoded to [0, 1] for Al-Fatiha for now.
+            const activeLessonIds = [0, 1];
+
             const { data, error } = await supabase
                 .from('student_progress')
                 .select('lesson_id, last_position, is_completed')
-                .eq('student_access_key_id', session.keyId);
+                .eq('student_access_key_id', session.keyId)
+                .in('lesson_id', activeLessonIds); // Optimized Filter
 
             if (data && !error) {
                 const positions: Record<number, number> = {};
@@ -162,7 +142,7 @@ const SmartVideoPlayer = ({
         fetchProgress();
     }, [session?.keyId]);
 
-    // 3. The Engine: Custom Shell Player
+    // 3. The Engine: Native Trimming Player
     useEffect(() => {
         // Cleanup
         if (player) {
@@ -175,23 +155,14 @@ const SmartVideoPlayer = ({
         }
         if (playIntervalRef.current) clearInterval(playIntervalRef.current);
 
-        if (playIntervalRef.current) clearInterval(playIntervalRef.current);
-
         // Lock: Do not load player until DB progress is ready
         if (isLoadingProgress) return;
 
         const currentLesson = lessons[currentLessonIndex];
         if (!currentLesson) return;
 
+        // Effective Duration is now intrinsically calculated from mapped lessons
         setDuration(currentLesson.endTime - currentLesson.startTime);
-
-        // 1. Duration Override Logic (Rescale video timeline)
-        // For Part 2 (Index 1), force duration to 337s (5:37) to hide the outro from UI
-        let effectiveDuration = currentLesson.endTime - currentLesson.startTime;
-        if (currentLessonIndex === 1) {
-            effectiveDuration = 337;
-        }
-        setDuration(effectiveDuration);
 
         const playerContainerId = "yt-main-player";
 
@@ -203,36 +174,37 @@ const SmartVideoPlayer = ({
                     return;
                 }
 
+                // CRITICAL: Native Youtube Trimming
+                const playerVars = {
+                    start: currentLesson.startTime,
+                    end: currentLesson.endTime, // Use HardStop from manifest (mapped to endTime)
+                    controls: 0,
+                    modestbranding: 1,
+                    disablekb: 1,
+                    rel: 0,
+                    fs: 0,
+                    iv_load_policy: 3,
+                    autoplay: 0,
+                    playsinline: 1,
+                };
+
                 const newPlayer = new window.YT.Player(elementId, {
                     height: '0',
                     width: '0',
                     videoId: currentLesson.videoId,
-                    playerVars: {
-                        start: currentLesson.startTime,
-                        end: currentLesson.endTime,
-                        controls: 0,
-                        modestbranding: 1,
-                        disablekb: 1,
-                        rel: 0,
-                        fs: 0,
-                        iv_load_policy: 3,
-                        autoplay: 0,
-                        playsinline: 1,
-                    },
+                    playerVars: playerVars,
                     events: {
                         onStateChange: (event: any) => {
                             const state = event.data;
                             setIsPlaying(state === window.YT.PlayerState.PLAYING);
 
                             if (state === window.YT.PlayerState.ENDED) {
-                                // Native end (backup)
+                                // Native end triggered by 'end' param
                                 handleSegmentEnd(newPlayer);
                             }
                         },
                         onReady: (event: any) => {
                             // Stable Logic: Always validly init player.
-                            // If completed, start from 0 (Re-entry = First Time Experience).
-                            // If not completed and has resume pos, resume.
                             const isLessonCompleted = completedLessonIds.has(currentLessonIndex);
 
                             if (!isLessonCompleted && resumePositions[currentLessonIndex] && resumePositions[currentLessonIndex] > 5) {
@@ -265,17 +237,9 @@ const SmartVideoPlayer = ({
                         const activeAyah = ayahSegments.find(a => rawTime >= a.startTime && rawTime < a.endTime);
                         setCurrentAyahText(activeAyah ? activeAyah.text : null);
 
-                        // SPECIAL LOGIC: Part 2 Hard Trim (5:37 / 337s)
-                        // Trigger completion exactly at 5:37 for Lesson 2 (Index 1)
-                        if (currentLessonIndex === 1 && relTime >= 337) {
-                            newPlayer.pauseVideo();
-                            newPlayer.seekTo(0); // Kill-Switch: Prevents background playback of outro
-                            handleSegmentEnd(newPlayer, true); // Force Surah Completion
-                            return;
-                        }
-
-                        // Strict Stop at Segment End
-                        if (rawTime >= currentLesson.endTime - 0.5) {
+                        // Fallback Kill-Switch (Redundant safety net)
+                        // If Native 'end' fails, this catches it.
+                        if (rawTime >= currentLesson.endTime + 1) {
                             newPlayer.pauseVideo();
                             handleSegmentEnd(newPlayer);
                         }
@@ -328,10 +292,22 @@ const SmartVideoPlayer = ({
     // CUSTOM CONTROLS
     const togglePlay = () => {
         if (!player) return;
+
         if (isPlaying) {
             player.pauseVideo();
             setIsPlaying(false);
         } else {
+            // RESTART LOGIC: If at the end, Seek to Start (0 relative)
+            // Using a 1s threshold to catch "ended" states
+            if (currentTime >= duration - 1) {
+                const currentLesson = lessons[currentLessonIndex];
+                if (currentLesson) {
+                    console.log("Re-starting lesson from beginning...");
+                    player.seekTo(currentLesson.startTime, true);
+                    setCurrentTime(0);
+                }
+            }
+
             player.playVideo();
             setIsPlaying(true);
         }
@@ -341,7 +317,7 @@ const SmartVideoPlayer = ({
         if (!player || !lessons[currentLessonIndex]) return;
         let seekTime = parseFloat(e.target.value);
 
-        // Constraint: cannot seek higher than effectiveDuration
+        // Constraint: cannot seek higher than duration
         if (seekTime > duration) seekTime = duration;
 
         const absSeekTime = lessons[currentLessonIndex].startTime + seekTime;
