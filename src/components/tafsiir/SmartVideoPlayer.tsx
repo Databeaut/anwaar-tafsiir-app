@@ -248,9 +248,13 @@ const SmartVideoPlayer = ({
 
                         // SPECIAL LOGIC: Part 2 Hard Trim (5:37 / 337s)
                         // Trigger completion exactly at 5:37 for Lesson 2 (Index 1)
+                        // This corresponds to relative time 337s (Absolute 637s)
                         if (currentLessonIndex === 1 && relTime >= 337) {
                             newPlayer.pauseVideo();
-                            handleSegmentEnd(newPlayer, true); // Force Surah Completion
+                            // Force strict completion modal, bypassing any other checks
+                            setShowCompletionOverlay(true);
+                            setIsSurahCompleted(true);
+                            handleSegmentEnd(newPlayer, true);
                             return;
                         }
 
