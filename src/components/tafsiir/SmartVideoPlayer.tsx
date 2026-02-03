@@ -40,6 +40,7 @@ const SmartVideoPlayer = ({
     const [isSurahCompleted, setIsSurahCompleted] = useState(false);
     const [resumePositions, setResumePositions] = useState<Record<number, number>>({});
     const [completedLessonIds, setCompletedLessonIds] = useState<Set<number>>(new Set());
+    const [isLoadingProgress, setIsLoadingProgress] = useState(true); // Optimization: Wait for DB
 
     const lastSyncTimeRef = useRef<number>(0);
 
@@ -131,7 +132,10 @@ const SmartVideoPlayer = ({
 
     useEffect(() => {
         const fetchProgress = async () => {
-            if (!session?.keyId) return;
+            if (!session?.keyId) {
+                setIsLoadingProgress(false); // No session, just load
+                return;
+            }
             const { data, error } = await supabase
                 .from('student_progress')
                 .select('lesson_id, last_position, is_completed')
@@ -153,6 +157,7 @@ const SmartVideoPlayer = ({
                 setResumePositions(positions);
                 setCompletedLessonIds(completedSet);
             }
+            setIsLoadingProgress(false); // Logic release
         };
         fetchProgress();
     }, [session?.keyId]);
@@ -169,6 +174,11 @@ const SmartVideoPlayer = ({
             setCurrentAyahText(null);
         }
         if (playIntervalRef.current) clearInterval(playIntervalRef.current);
+
+        if (playIntervalRef.current) clearInterval(playIntervalRef.current);
+
+        // Lock: Do not load player until DB progress is ready
+        if (isLoadingProgress) return;
 
         const currentLesson = lessons[currentLessonIndex];
         if (!currentLesson) return;
@@ -237,7 +247,7 @@ const SmartVideoPlayer = ({
                 });
                 setPlayer(newPlayer);
 
-                // 4. Custom Polling Loop & Sync
+                // 4. Custom Polling Loop & Sync (High Frequency 100ms)
                 playIntervalRef.current = setInterval(() => {
                     if (newPlayer && newPlayer.getCurrentTime) {
                         const rawTime = newPlayer.getCurrentTime();
@@ -259,6 +269,7 @@ const SmartVideoPlayer = ({
                         // Trigger completion exactly at 5:37 for Lesson 2 (Index 1)
                         if (currentLessonIndex === 1 && relTime >= 337) {
                             newPlayer.pauseVideo();
+                            newPlayer.seekTo(0); // Kill-Switch: Prevents background playback of outro
                             handleSegmentEnd(newPlayer, true); // Force Surah Completion
                             return;
                         }
@@ -269,7 +280,7 @@ const SmartVideoPlayer = ({
                             handleSegmentEnd(newPlayer);
                         }
                     }
-                }, 500);
+                }, 100);
 
             } else {
                 setTimeout(initPlayer, 100);
@@ -281,7 +292,7 @@ const SmartVideoPlayer = ({
         return () => {
             if (playIntervalRef.current) clearInterval(playIntervalRef.current);
         };
-    }, [currentLessonIndex, lessons]);
+    }, [currentLessonIndex, lessons, isLoadingProgress]);
 
     // LOGIC: Handle End of Segment (Conditional Overlay)
     const handleSegmentEnd = (activePlayer: any, forceIsComplete = false) => {
