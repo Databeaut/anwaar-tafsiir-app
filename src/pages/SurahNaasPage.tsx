@@ -73,15 +73,6 @@ const SurahNaasPage = () => {
             <Navbar currentSurahId={114} />
 
             <div className="max-w-5xl mx-auto px-4 py-8 relative z-10 space-y-8">
-                {/* Back Button */}
-                <button
-                    onClick={() => navigate('/')}
-                    className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-4 group"
-                >
-                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                    <span>Back to Home</span>
-                </button>
-
                 {/* Video Player */}
                 <div className="w-full -mt-8">
                     <SmartVideoPlayer

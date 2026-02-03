@@ -96,7 +96,7 @@ export const surahManifest: SurahManifest[] = [
                     hardStop: 141
                 },
                 isLockedByDefault: false,
-                durationFormatted: "2:21"
+                durationFormatted: "2:20"
             }
         ],
         ayahs: [
