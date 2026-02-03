@@ -248,13 +248,9 @@ const SmartVideoPlayer = ({
 
                         // SPECIAL LOGIC: Part 2 Hard Trim (5:37 / 337s)
                         // Trigger completion exactly at 5:37 for Lesson 2 (Index 1)
-                        // This corresponds to relative time 337s (Absolute 637s)
                         if (currentLessonIndex === 1 && relTime >= 337) {
                             newPlayer.pauseVideo();
-                            // Force strict completion modal, bypassing any other checks
-                            setShowCompletionOverlay(true);
-                            setIsSurahCompleted(true);
-                            handleSegmentEnd(newPlayer, true);
+                            handleSegmentEnd(newPlayer, true); // Force Surah Completion
                             return;
                         }
 
@@ -278,23 +274,27 @@ const SmartVideoPlayer = ({
         };
     }, [currentLessonIndex, lessons]);
 
-    // LOGIC: Handle End of Segment (Stable & Overlay Always)
+    // LOGIC: Handle End of Segment (Conditional Overlay)
     const handleSegmentEnd = (activePlayer: any, forceIsComplete = false) => {
         if (playIntervalRef.current) clearInterval(playIntervalRef.current); // Stop polling
         setIsPlaying(false);
 
-        // Always show completion modal - no skipping for re-entry
-        // This ensures the experience is consistent ("First Time" feel)
-        const isSurahFinish = currentLessonIndex === lessons.length - 1 || forceIsComplete;
+        // Check completion status from Supabase/State
+        const isAlreadyCompleted = completedLessonIds.has(currentLessonIndex);
 
-        setIsSurahCompleted(isSurahFinish);
-        setShowCompletionOverlay(true);
+        if (!isAlreadyCompleted) {
+            const isSurahFinish = currentLessonIndex === lessons.length - 1 || forceIsComplete;
+            setIsSurahCompleted(isSurahFinish);
+            setShowCompletionOverlay(true);
 
-        // Add to local state to instantly unlock UI
-        setCompletedLessonIds(prev => new Set(prev).add(currentLessonIndex));
+            // Add to local state to instantly unlock UI
+            setCompletedLessonIds(prev => new Set(prev).add(currentLessonIndex));
 
-        // Sync Completion to DB
-        syncProgressToSupabase(currentLessonIndex, duration, true);
+            // Sync Completion to DB
+            syncProgressToSupabase(currentLessonIndex, duration, true);
+        } else {
+            console.log("Lesson already completed. Modal suppressed.");
+        }
     };
 
     const handleContinue = () => {
@@ -312,18 +312,6 @@ const SmartVideoPlayer = ({
             player.pauseVideo();
             setIsPlaying(false);
         } else {
-            // Check if we need to restart a completed lesson
-            // If lesson is complete AND we are essentially at the end or hard stop
-            const isAtHardStop = currentLessonIndex === 1 && currentTime >= 337;
-            const isAtEnd = currentTime >= duration - 1;
-
-            if (completedLessonIds.has(currentLessonIndex) && (isAtEnd || isAtHardStop)) {
-                const absStartTime = lessons[currentLessonIndex].startTime;
-                player.seekTo(absStartTime, true);
-                setCurrentTime(0);
-                setShowCompletionOverlay(false); // Ensure overlay is hidden
-            }
-
             player.playVideo();
             setIsPlaying(true);
         }
