@@ -211,7 +211,9 @@ const SmartVideoPlayer = ({
                             }
                         },
                         onReady: (event: any) => {
-                            // Resume from Saved Position (ONLY if not completed)
+                            // Stable Logic: Always validly init player.
+                            // If completed, start from 0 (Re-entry = First Time Experience).
+                            // If not completed and has resume pos, resume.
                             const isLessonCompleted = completedLessonIds.has(currentLessonIndex);
 
                             if (!isLessonCompleted && resumePositions[currentLessonIndex] && resumePositions[currentLessonIndex] > 5) {
@@ -245,6 +247,7 @@ const SmartVideoPlayer = ({
                         setCurrentAyahText(activeAyah ? activeAyah.text : null);
 
                         // SPECIAL LOGIC: Part 2 Hard Trim (5:37 / 337s)
+                        // Trigger completion exactly at 5:37 for Lesson 2 (Index 1)
                         if (currentLessonIndex === 1 && relTime >= 337) {
                             newPlayer.pauseVideo();
                             handleSegmentEnd(newPlayer, true); // Force Surah Completion
@@ -271,25 +274,22 @@ const SmartVideoPlayer = ({
         };
     }, [currentLessonIndex, lessons]);
 
-    // LOGIC: Handle End of Segment
+    // LOGIC: Handle End of Segment (Stable & Overlay Always)
     const handleSegmentEnd = (activePlayer: any, forceIsComplete = false) => {
         if (playIntervalRef.current) clearInterval(playIntervalRef.current); // Stop polling
         setIsPlaying(false);
 
-        // Check if Last Segment OR Forced Complete
-        // Always show completion modal (even for re-entry)
-        if (currentLessonIndex === lessons.length - 1 || forceIsComplete) {
-            setIsSurahCompleted(true);
-            setShowCompletionOverlay(true);
-        } else {
-            setIsSurahCompleted(false);
-            setShowCompletionOverlay(true);
-        }
+        // Always show completion modal - no skipping for re-entry
+        // This ensures the experience is consistent ("First Time" feel)
+        const isSurahFinish = currentLessonIndex === lessons.length - 1 || forceIsComplete;
 
-        // Add to local set immediately to prevent potential race conditions or re-triggers
+        setIsSurahCompleted(isSurahFinish);
+        setShowCompletionOverlay(true);
+
+        // Add to local state to instantly unlock UI
         setCompletedLessonIds(prev => new Set(prev).add(currentLessonIndex));
 
-        // Sync Completion
+        // Sync Completion to DB
         syncProgressToSupabase(currentLessonIndex, duration, true);
     };
 
