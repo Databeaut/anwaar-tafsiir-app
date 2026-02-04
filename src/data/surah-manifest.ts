@@ -96,10 +96,10 @@ export const surahManifest: SurahManifest[] = [
                 timestamps: {
                     start: 0,
                     end: 141,
-                    hardStop: 141
+                    hardStop: 136
                 },
                 isLockedByDefault: true,
-                durationFormatted: "2:21"
+                durationFormatted: "2:16"
             }
         ],
         ayahs: [

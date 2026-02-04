@@ -499,6 +499,11 @@ const SmartVideoPlayer = ({
                                             <CheckCircle2 className="w-5 h-5" />
                                             <span>Farriinta waa la diray!</span>
                                         </div>
+                                    ) : completedLessonIds.has(lessons[currentLessonIndex]?.id) ? (
+                                        <div className="flex items-center justify-center gap-2 w-full py-3.5 bg-zinc-800 rounded-xl text-zinc-400 font-bold border border-white/10">
+                                            <CheckCircle2 className="w-5 h-5" />
+                                            <span>Casharka Horay Ayaad U Dirtay</span>
+                                        </div>
                                     ) : (
                                         <button
                                             onClick={handleSendToTeacher}
@@ -581,12 +586,14 @@ const SmartVideoPlayer = ({
                         const isActive = idx === currentLessonIndex;
                         const isCompleted = completedLessonIds.has(idx) || (!lesson.isLocked && idx < currentLessonIndex);
                         const isActuallyLocked = lesson.isLocked && !isCompleted;
+                        // Single lesson fix: If there's only 1 lesson, it should never LOOK locked/disabled
+                        const isVisuallyLocked = isActuallyLocked && lessons.length > 1;
 
                         return (
-                            <button key={lesson.id} onClick={() => !isActuallyLocked && handleLessonCardClick(idx)} className={`relative group text-left rounded-2xl transition-all duration-200 border backdrop-blur-xl overflow-hidden focus:outline-none ${isActive ? "bg-white/10 border-emerald-500/40 shadow-lg shadow-emerald-500/5 scale-[1.02]" : "bg-white/5 border-white/10 hover:bg-white/10"} ${isActuallyLocked ? "opacity-40 cursor-not-allowed grayscale" : "cursor-pointer"}`}>
+                            <button key={lesson.id} onClick={() => !isVisuallyLocked && handleLessonCardClick(idx)} className={`relative group text-left rounded-2xl transition-all duration-200 border backdrop-blur-xl overflow-hidden focus:outline-none ${isActive ? "bg-white/10 border-emerald-500/40 shadow-lg shadow-emerald-500/5 scale-[1.02]" : "bg-white/5 border-white/10 hover:bg-white/10"} ${isVisuallyLocked ? "opacity-40 cursor-not-allowed grayscale" : "cursor-pointer"}`}>
                                 <div className="p-6 flex flex-row items-center gap-4">
                                     <div className={`w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center transition-colors ${isActive ? "bg-emerald-500 text-black shadow-lg shadow-emerald-500/20" : isCompleted ? "bg-emerald-500/20 text-emerald-500" : "bg-white/10 text-zinc-400"}`}>
-                                        {isActuallyLocked ? <Lock className="w-5 h-5" /> : isActive && isPlaying ? <Pause className="w-6 h-6 fill-current" /> : isCompleted ? <CheckCircle2 className="w-6 h-6" /> : <Play className="w-6 h-6 fill-current" />}
+                                        {isVisuallyLocked ? <Lock className="w-5 h-5" /> : isActive && isPlaying ? <Pause className="w-6 h-6 fill-current" /> : isCompleted ? <CheckCircle2 className="w-6 h-6" /> : <Play className="w-6 h-6 fill-current" />}
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex justify-between items-center mb-1">
