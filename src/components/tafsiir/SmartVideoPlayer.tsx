@@ -323,7 +323,8 @@ const SmartVideoPlayer = ({
         const currentLesson = lessons[currentLessonIndex];
         const isAlreadyCompleted = completedLessonIds.has(currentLesson.id);
 
-        // SUPPRESS MODAL if already completed
+        // GATEKEEPER: Silent Review Mode
+        // If the student has already completed this lesson (Second Timer), the modal must NEVER appear.
         if (!isAlreadyCompleted) {
             const isSurahFinish = currentLessonIndex === lessons.length - 1 || forceIsComplete;
             setIsSurahCompleted(isSurahFinish);
@@ -500,10 +501,13 @@ const SmartVideoPlayer = ({
                                             <span>Farriinta waa la diray!</span>
                                         </div>
                                     ) : completedLessonIds.has(lessons[currentLessonIndex]?.id) ? (
-                                        <div className="flex items-center justify-center gap-2 w-full py-3.5 bg-zinc-800 rounded-xl text-zinc-400 font-bold border border-white/10">
+                                        <button
+                                            disabled={true}
+                                            className="flex items-center justify-center gap-2 w-full py-3.5 bg-zinc-800 rounded-xl text-zinc-400 font-bold border border-white/10 opacity-70 cursor-not-allowed"
+                                        >
                                             <CheckCircle2 className="w-5 h-5" />
                                             <span>Casharka Horay Ayaad U Dirtay</span>
-                                        </div>
+                                        </button>
                                     ) : (
                                         <button
                                             onClick={handleSendToTeacher}
