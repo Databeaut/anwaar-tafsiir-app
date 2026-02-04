@@ -42,6 +42,7 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
     // Hardcoded list for now, ideally fetched or from config
     const surahList = [
         { id: 1, nameBase: "Surat Al-Fatiha", nameArabic: "سورة الفاتحة", lessonCount: 2 },
+        { id: 113, nameBase: "Surat Al-Falaq", nameArabic: "سورة الفلق", lessonCount: 1 },
         { id: 114, nameBase: "Surat An-Naas", nameArabic: "سورة الناس", lessonCount: 1 } // Example ID for Naas
     ];
 

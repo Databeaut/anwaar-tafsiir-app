@@ -79,6 +79,31 @@ export const surahManifest: SurahManifest[] = [
         ]
     },
     {
+        id: 113,
+        nameSomali: "Surah Al-Falaq",
+        nameArabic: "سورة الفلق",
+        lessons: [
+            {
+                id: 113,
+                surahId: 113,
+                lessonNumber: 1,
+                title: "Suuradda Al-Falaq",
+                subtitle: "Dhawaan Filo",
+                videoId: "KcnTeJvyqr4", // Placeholder ID from request
+                timestamps: {
+                    start: 0,
+                    end: 0
+                },
+                isLockedByDefault: true, // "Status: COMING_SOON" implies locked or special state
+                durationFormatted: "0:00"
+            }
+        ],
+        ayahs: [
+            // Empty or minimal ayahs since it's "Coming Soon"
+            { number: 1, text: "قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ", startTime: 0, endTime: 0 }
+        ]
+    },
+    {
         id: 114,
         nameSomali: "Surah An-Naas",
         nameArabic: "سورة الناس",

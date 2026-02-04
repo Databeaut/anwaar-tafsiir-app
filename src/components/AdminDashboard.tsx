@@ -109,6 +109,7 @@ const StudentAccessRow = ({
                     value={selectedSurah}
                     onChange={(e) => setSelectedSurah(Number(e.target.value))}
                 >
+                    <option value="113">Surah Al-Falaq (113)</option>
                     <option value="114">Surah An-Naas (114)</option>
                     <option value="1">Surah Al-Fatiha (1)</option>
                 </select>
@@ -116,8 +117,8 @@ const StudentAccessRow = ({
                 <Button
                     size="sm"
                     className={`h-7 px-2 text-xs border transition-colors group relative overflow-hidden ${isUnlocked
-                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30'
-                            : 'bg-red-500/10 text-gray-400 border-red-500/10 hover:bg-emerald-500/20 hover:text-emerald-400 hover:border-emerald-500/30'
+                        ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30'
+                        : 'bg-red-500/10 text-gray-400 border-red-500/10 hover:bg-emerald-500/20 hover:text-emerald-400 hover:border-emerald-500/30'
                         }`}
                     onClick={handleToggleAccess}
                     disabled={isUpdating}
