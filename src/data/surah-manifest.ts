@@ -25,6 +25,7 @@ export interface AyahSegment {
 
 export interface SurahManifest {
     id: number;
+    displayOrder: number;
     nameSomali: string;
     nameArabic: string;
     lessons: LessonContent[];
@@ -34,6 +35,7 @@ export interface SurahManifest {
 export const surahManifest: SurahManifest[] = [
     {
         id: 1,
+        displayOrder: 1,
         nameSomali: "Surah Al-Faatixa",
         nameArabic: "سورة الفاتحة",
         lessons: [
@@ -80,6 +82,7 @@ export const surahManifest: SurahManifest[] = [
     },
     {
         id: 113,
+        displayOrder: 3,
         nameSomali: "Surah Al-Falaq",
         nameArabic: "سورة الفلق",
         lessons: [
@@ -88,23 +91,28 @@ export const surahManifest: SurahManifest[] = [
                 surahId: 113,
                 lessonNumber: 1,
                 title: "Suuradda Al-Falaq",
-                subtitle: "Dhawaan Filo",
-                videoId: "KcnTeJvyqr4", // Placeholder ID from request
+                subtitle: "Tafsiirka Suuradda Al-Falaq",
+                videoId: "KcnTeJvyqr4",
                 timestamps: {
                     start: 0,
-                    end: 0
+                    end: 141,
+                    hardStop: 141
                 },
-                isLockedByDefault: true, // "Status: COMING_SOON" implies locked or special state
-                durationFormatted: "0:00"
+                isLockedByDefault: true,
+                durationFormatted: "2:21"
             }
         ],
         ayahs: [
-            // Empty or minimal ayahs since it's "Coming Soon"
-            { number: 1, text: "قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ", startTime: 0, endTime: 0 }
+            { number: 1, text: "قُلۡ أَعُوذُ بِرَبِّ ٱلۡفَلَقِ", startTime: 0, endTime: 13 },
+            { number: 2, text: "مِن شَرِّ مَا خَلَقَ", startTime: 14, endTime: 20 },
+            { number: 3, text: "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ", startTime: 21, endTime: 54 },
+            { number: 4, text: "وَمِن شَرِّ ٱلنَّفَّٰثَٰتِ فِي ٱلۡعُقَدِ", startTime: 55, endTime: 126 },
+            { number: 5, text: "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ", startTime: 127, endTime: 140 }
         ]
     },
     {
         id: 114,
+        displayOrder: 2,
         nameSomali: "Surah An-Naas",
         nameArabic: "سورة الناس",
         lessons: [

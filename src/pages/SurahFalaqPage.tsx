@@ -2,8 +2,26 @@ import { motion } from "framer-motion";
 import { BookOpen, Sparkles, MapPin, Target } from "lucide-react";
 import Navbar from "@/components/tafsiir/Navbar";
 import FloatingDecorations from "@/components/tafsiir/FloatingDecorations";
+import SmartVideoPlayer from "@/components/tafsiir/SmartVideoPlayer";
+import { useState, useCallback } from "react";
+import { type Lesson } from "@/components/tafsiir/surahData";
 
 const SurahFalaqPage = () => {
+    const [lessons, setLessons] = useState<Lesson[]>([]);
+    const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
+
+    const handleLessonsReady = useCallback((newLessons: Lesson[]) => {
+        setLessons(newLessons);
+    }, []);
+
+    const handleLessonChange = useCallback((index: number) => {
+        setCurrentLessonIndex(index);
+    }, []);
+
+    const handleLessonCompleted = useCallback((index: number) => {
+        console.log("Lesson completed:", index);
+    }, []);
+
     // Data for Surah Al-Falaq
     const falaqData = {
         nameMeaning: "Al-Falaq (الفلق) waxaa loola jeedaa 'Waaberiga' ama 'Kala dilaaca'. Waa suuradda 113-aad ee Quraanka.",
@@ -53,27 +71,16 @@ const SurahFalaqPage = () => {
             <Navbar currentSurahId={113} />
 
             <div className="max-w-5xl mx-auto px-4 py-8 relative z-10 space-y-8">
-                {/* VIDEO PLACEHOLDER: Glassmorphism "Coming Soon" */}
-                <div className="w-full -mt-8 aspect-video rounded-3xl overflow-hidden relative shadow-2xl border border-white/10 group">
-                    {/* Background with Blur */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-black to-zinc-900" />
-                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1614850523060-8da1d56e37ad?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity duration-700 blur-sm scale-110" />
-
-                    {/* Glass Overlay Content */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-8 backdrop-blur-sm bg-black/40">
-                        <div className="relative">
-                            <div className="absolute -inset-4 bg-emerald-500/20 rounded-full blur-xl animate-pulse" />
-                            <h2 className="relative text-4xl md:text-5xl font-bold font-arabic text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200 tracking-wide drop-shadow-lg">
-                                Dhawaan Filo
-                            </h2>
-                        </div>
-                        <p className="mt-4 text-slate-400 text-lg font-medium border-t border-white/10 pt-4 px-8">
-                            Dersiga Suuradda Al-Falaq wuu soo socdaa Insha'Allah
-                        </p>
-                    </div>
-
-                    {/* Subtle Border Glow */}
-                    <div className="absolute inset-0 rounded-3xl border border-white/10 group-hover:border-emerald-500/30 transition-colors duration-500" />
+                {/* VIDEO PLAYER: Active Learning Session */}
+                <div className="w-full -mt-8">
+                    <SmartVideoPlayer
+                        onLessonsReady={handleLessonsReady}
+                        onLessonChange={handleLessonChange}
+                        onLessonCompleted={handleLessonCompleted}
+                        currentLessonIndex={currentLessonIndex}
+                        lessons={lessons}
+                        surahId={113}
+                    />
                 </div>
 
                 {/* Info Card - SURAH DETAILS */}

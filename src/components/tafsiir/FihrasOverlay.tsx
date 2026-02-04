@@ -40,11 +40,12 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
     if (!isOpen) return null;
 
     // Hardcoded list for now, ideally fetched or from config
+    // Hardcoded list for now, ideally fetched or from config
     const surahList = [
-        { id: 1, nameBase: "Surat Al-Fatiha", nameArabic: "سورة الفاتحة", lessonCount: 2 },
-        { id: 113, nameBase: "Surat Al-Falaq", nameArabic: "سورة الفلق", lessonCount: 1 },
-        { id: 114, nameBase: "Surat An-Naas", nameArabic: "سورة الناس", lessonCount: 1 } // Example ID for Naas
-    ];
+        { id: 1, displayOrder: 1, nameBase: "Surat Al-Fatiha", nameArabic: "سورة الفاتحة", lessonCount: 2 },
+        { id: 114, displayOrder: 2, nameBase: "Surat An-Naas", nameArabic: "سورة الناس", lessonCount: 1 },
+        { id: 113, displayOrder: 3, nameBase: "Surat Al-Falaq", nameArabic: "سورة الفلق", lessonCount: 1 }
+    ].sort((a, b) => a.displayOrder - b.displayOrder);
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -110,7 +111,7 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
                                                 ? "bg-white/10 text-gray-300 border-white/20"
                                                 : "bg-white/5 text-gray-600 border-white/5"
                                     )}>
-                                        {surah.id}
+                                        {surah.displayOrder}
                                     </div>
                                     <div>
                                         <h3 className={cn(

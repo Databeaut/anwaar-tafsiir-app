@@ -109,9 +109,9 @@ const StudentAccessRow = ({
                     value={selectedSurah}
                     onChange={(e) => setSelectedSurah(Number(e.target.value))}
                 >
-                    <option value="113">Surah Al-Falaq (113)</option>
-                    <option value="114">Surah An-Naas (114)</option>
-                    <option value="1">Surah Al-Fatiha (1)</option>
+                    <option value="1">Lesson 1: Surah Al-Fatiha (1)</option>
+                    <option value="114">Lesson 2: Surah An-Naas (114)</option>
+                    <option value="113">Lesson 3: Surah Al-Falaq (113)</option>
                 </select>
 
                 <Button
