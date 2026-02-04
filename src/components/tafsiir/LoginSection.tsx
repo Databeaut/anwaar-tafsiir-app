@@ -77,7 +77,7 @@ const LoginSection = () => {
   return (
     <section
       id="login-section"
-      className="relative py-24 px-4 overflow-hidden min-h-[700px] flex items-center justify-center bg-[url('/login-bg-optimized.png')] bg-cover bg-center bg-no-repeat"
+      className="relative py-24 px-4 overflow-hidden min-h-[700px] flex items-center justify-center bg-[url('/login-bg-optimized.png')] bg-fixed bg-cover bg-center bg-no-repeat"
     >
       {/* Mobile Optimization: Dark Overlay for text readability */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
@@ -97,7 +97,7 @@ const LoginSection = () => {
         <div className="relative group/card">
           <form
             onSubmit={handleSubmit}
-            className="relative bg-white/10 backdrop-blur-md border border-white/10 rounded-[40px] p-8 space-y-6 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]"
+            className="relative bg-white/10 backdrop-blur-xl border border-white/10 rounded-[40px] p-8 space-y-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(255,255,255,0.05)]"
           >
             {/* Student Name Input */}
             <div className="space-y-2 group/field transition-all duration-300">
