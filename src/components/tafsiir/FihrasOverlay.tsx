@@ -44,7 +44,8 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
     const surahList = [
         { id: 1, displayOrder: 1, nameBase: "Surat Al-Fatiha", nameArabic: "سورة الفاتحة", lessonCount: 2 },
         { id: 114, displayOrder: 2, nameBase: "Surat An-Naas", nameArabic: "سورة الناس", lessonCount: 1 },
-        { id: 113, displayOrder: 3, nameBase: "Surat Al-Falaq", nameArabic: "سورة الفلق", lessonCount: 1 }
+        { id: 113, displayOrder: 3, nameBase: "Surat Al-Falaq", nameArabic: "سورة الفلق", lessonCount: 1 },
+        { id: 112, displayOrder: 4, nameBase: "Surat Al-Ikhlaas", nameArabic: "سورة الإخلاص", lessonCount: 1 }
     ].sort((a, b) => a.displayOrder - b.displayOrder);
 
     return (

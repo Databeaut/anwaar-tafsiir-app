@@ -140,5 +140,34 @@ export const surahManifest: SurahManifest[] = [
             { number: 5, text: "ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ", startTime: 81, endTime: 133 },
             { number: 6, text: "مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ", startTime: 134, endTime: 140 }
         ]
+    },
+    {
+        id: 112,
+        displayOrder: 4,
+        nameSomali: "Surah Al-Ikhlaas",
+        nameArabic: "سورة الإخلاص",
+        lessons: [
+            {
+                id: 112,
+                surahId: 112,
+                lessonNumber: 1,
+                title: "Suuradda Al-Ikhlaas",
+                subtitle: "Tafsiirka Suuradda Al-Ikhlaas",
+                videoId: "ipLrv5nRHLw",
+                timestamps: {
+                    start: 0,
+                    end: 115,
+                    hardStop: 113
+                },
+                isLockedByDefault: true,
+                durationFormatted: "1:53"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "قُلۡ هُوَ ٱللَّهُ أَحَدٌ", startTime: 0, endTime: 29 },
+            { number: 2, text: "ٱللَّهُ ٱلصَّمَدُ", startTime: 30, endTime: 59 },
+            { number: 3, text: "لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ", startTime: 60, endTime: 73 },
+            { number: 4, text: "وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ", startTime: 74, endTime: 113 }
+        ]
     }
 ];
