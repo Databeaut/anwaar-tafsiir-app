@@ -59,6 +59,10 @@ const SmartVideoPlayer = ({
     const playIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
+    // Sync Ref for Intervals (Closure Safety)
+    const completedLessonIdsRef = useRef(new Set<number>());
+    useEffect(() => { completedLessonIdsRef.current = completedLessonIds; }, [completedLessonIds]);
+
     // 0. ACCESS GUARD UPDATE
     useEffect(() => {
         if (checkIsLocked(surahId || 0) === false) {
@@ -340,16 +344,17 @@ const SmartVideoPlayer = ({
 
         const currentLesson = lessons[currentLessonIndex];
 
-        // STRICT GUARD: Check against the Set of completed IDs
-        const isAlreadyCompleted = completedLessonIds.has(currentLesson.id);
+        // STRICT GUARD: Check against the Set of completed IDs (Ref Logic)
+        const isAlreadyCompleted = completedLessonIdsRef.current.has(currentLesson.id);
 
         if (isAlreadyCompleted) {
             console.log("Review mode: Suppression of completion card for Lesson ID:", currentLesson.id);
             return; // Do nothing for second-timers
         }
 
-        // SURGICAL FIX for Lesson 5 (111) & 6 (110): Absolute Persistence
-        if ((currentLesson.id === 111 || currentLesson.id === 110) && completedLessonIds.has(currentLesson.id)) {
+        // SURGICAL FIX for Lesson 5-10: Absolute Persistence
+        // IDs: 111(5), 110(6), 109(7), 108(8), 107(9), 106(10)
+        if ((currentLesson.id >= 106 && currentLesson.id <= 111) && completedLessonIdsRef.current.has(currentLesson.id)) {
             console.log(`HARD GUARD: Suppressing completion modal for Lesson (${currentLesson.id}).`);
             return;
         }

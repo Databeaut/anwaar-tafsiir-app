@@ -12,7 +12,6 @@ export const useSurahAccess = (studentKeyId: string | undefined, currentSurahId?
         }
 
         try {
-            // 1. Fetch All Access for Student
             const { data, error } = await supabase
                 .from('student_surah_access')
                 .select('surah_id, is_unlocked')
@@ -20,7 +19,7 @@ export const useSurahAccess = (studentKeyId: string | undefined, currentSurahId?
 
             if (data && !error) {
                 const unlocked = new Set<number>();
-                unlocked.add(1); // Ensure Fatiha
+                unlocked.add(1); // Fatiha always unlocked
 
                 data.forEach(record => {
                     if (record.is_unlocked) {
@@ -28,19 +27,10 @@ export const useSurahAccess = (studentKeyId: string | undefined, currentSurahId?
                     }
                 });
 
-                // FORCE REFRESH FOR SURAH 110 if it's the current one
-                // This bypasses any potential stale state
+                // Helper for Surah 110 (An-Nasr) special case
                 if (currentSurahId === 110) {
-                    const { data: nasrData } = await supabase
-                        .from('student_surah_access')
-                        .select('is_unlocked')
-                        .eq('student_key_id', studentKeyId)
-                        .eq('surah_id', 110)
-                        .single();
-
-                    if (nasrData?.is_unlocked) {
-                        unlocked.add(110);
-                    }
+                    // Check specifically for 110 if needed, but the main fetch should cover it.
+                    // Kept logic minimal to avoid over-fetching.
                 }
 
                 setUnlockedSurahs(unlocked);
@@ -57,20 +47,35 @@ export const useSurahAccess = (studentKeyId: string | undefined, currentSurahId?
 
         if (!studentKeyId) return;
 
-        // Realtime Subscription
+        // Optimized Realtime Subscription
         const channel = supabase
-            .channel('public:student_surah_access')
+            .channel('access-changes')
             .on(
                 'postgres_changes',
                 {
-                    event: '*',
+                    event: '*', // Listen to INSERT and UPDATE
                     schema: 'public',
                     table: 'student_surah_access',
                     filter: `student_key_id=eq.${studentKeyId}`
                 },
-                (payload) => {
+                (payload: any) => {
                     console.log("🔔 Realtime Access Update Detected:", payload);
-                    fetchAccess();
+
+                    // Immediate Local Update (No Re-fetch needed)
+                    if (payload.new) {
+                        const { surah_id, is_unlocked } = payload.new;
+                        setUnlockedSurahs(prev => {
+                            const newSet = new Set(prev);
+                            if (is_unlocked) {
+                                newSet.add(surah_id);
+                                console.log(`🔓 Instantly Unlocked Surah ${surah_id}`);
+                            } else {
+                                newSet.delete(surah_id);
+                                console.log(`🔒 Instantly Locked Surah ${surah_id}`);
+                            }
+                            return newSet;
+                        });
+                    }
                 }
             )
             .subscribe();
@@ -78,7 +83,7 @@ export const useSurahAccess = (studentKeyId: string | undefined, currentSurahId?
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [studentKeyId, currentSurahId]);
+    }, [studentKeyId]);
 
     const isLocked = (surahId: number) => !unlockedSurahs.has(surahId);
 

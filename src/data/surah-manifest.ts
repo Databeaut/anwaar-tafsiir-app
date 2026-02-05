@@ -227,5 +227,126 @@ export const surahManifest: SurahManifest[] = [
             { number: 2, text: "وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا", startTime: 11, endTime: 27 },
             { number: 3, text: "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ ۚ إِنَّهُ كَانَ تَوَّابًا", startTime: 28, endTime: 78 }
         ]
+    },
+    {
+        id: 109,
+        displayOrder: 7,
+        nameSomali: "Surah Al-Kaafiruun",
+        nameArabic: "سورة الكافرون",
+        lessons: [
+            {
+                id: 109,
+                surahId: 109,
+                lessonNumber: 1,
+                title: "Suuradda Al-Kaafiruun",
+                subtitle: "Tafsiirka Suuradda Al-Kaafiruun",
+                videoId: "cgk7sk4Vagc",
+                timestamps: {
+                    start: 0,
+                    end: 38,
+                    hardStop: 38
+                },
+                isLockedByDefault: true,
+                durationFormatted: "0:38"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "قُلْ يَا أَيُّهَا الْكَافِرُونَ", startTime: 0, endTime: 8 },
+            { number: 2, text: "لَا أَعْبُدُ مَا تَعْبُدُونَ", startTime: 9, endTime: 15 },
+            { number: 3, text: "وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ", startTime: 16, endTime: 23 },
+            { number: 6, text: "لَكُمْ دِينُكُمْ وَلِيَ دِينِ", startTime: 24, endTime: 38 }
+        ]
+    },
+    {
+        id: 108,
+        displayOrder: 8,
+        nameSomali: "Surah Al-Kawthar",
+        nameArabic: "سورة الكوثر",
+        lessons: [
+            {
+                id: 108,
+                surahId: 108,
+                lessonNumber: 1,
+                title: "Suuradda Al-Kawthar",
+                subtitle: "Tafsiirka Suuradda Al-Kawthar",
+                videoId: "oHN86ZWGwJU",
+                timestamps: {
+                    start: 0,
+                    end: 59,
+                    hardStop: 59
+                },
+                isLockedByDefault: true,
+                durationFormatted: "0:59"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ", startTime: 0, endTime: 30 },
+            { number: 2, text: "فَصَلِّ لِرَبِّكَ وَانْحَرْ", startTime: 32, endTime: 45 },
+            { number: 3, text: "إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ", startTime: 45, endTime: 59 }
+        ]
+    },
+    {
+        id: 107,
+        displayOrder: 9,
+        nameSomali: "Surah Al-Maacun",
+        nameArabic: "سورة الماعون",
+        lessons: [
+            {
+                id: 107,
+                surahId: 107,
+                lessonNumber: 1,
+                title: "Suuradda Al-Maacun",
+                subtitle: "Tafsiirka Suuradda Al-Maacun",
+                videoId: "LCBvtAp484Y",
+                timestamps: {
+                    start: 0,
+                    end: 306,
+                    hardStop: 306
+                },
+                isLockedByDefault: true,
+                durationFormatted: "5:06"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "أَرَأَيْتَ الَّذِي يُكَذِّبُ بِالدِّينِ", startTime: 0, endTime: 30 },
+            { number: 2, text: "فَذَلِكَ الَّذِي يَدُعُّ الْيَتِيمَ", startTime: 31, endTime: 68 },
+            { number: 3, text: "وَلَا يَحُضُّ عَلَى طَعَامِ الْمِسْكِينِ", startTime: 69, endTime: 91 },
+            { number: 4, text: "فَوَيْلٌ لِّلْمُصَلِّينَ", startTime: 92, endTime: 112 },
+            { number: 5, text: "الَّذِينَ هُمْ عَن صَلَاتِهِمْ سَاهُونَ", startTime: 113, endTime: 208 },
+            { number: 4, text: "فَوَيْلٌ لِّلْمُصَلِّينَ", startTime: 208, endTime: 216 },
+            { number: 5, text: "الَّذِينَ هُمْ عَن صَلَاتِهِمْ سَاهُونَ", startTime: 217, endTime: 222 },
+            { number: 6, text: "الَّذِينَ هُمْ يُرَاءُونَ", startTime: 223, endTime: 255 },
+            { number: 7, text: "وَيَمْنَعُونَ الْمَاعُونَ", startTime: 256, endTime: 306 }
+        ]
+    },
+    {
+        id: 106,
+        displayOrder: 10,
+        nameSomali: "Surah Quraysh",
+        nameArabic: "سورة قريش",
+        lessons: [
+            {
+                id: 106,
+                surahId: 106,
+                lessonNumber: 1,
+                title: "Suuradda Quraysh",
+                subtitle: "Tafsiirka Suuradda Quraysh",
+                videoId: "CG6r7RWsxS4",
+                timestamps: {
+                    start: 0,
+                    end: 140,
+                    hardStop: 140
+                },
+                isLockedByDefault: true,
+                durationFormatted: "2:20"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "لِإِيلَافِ قُرَيْشٍ", startTime: 0, endTime: 42 },
+            { number: 2, text: "إِيلَافِهِمْ رِحْلَةَ الشِّتَاءِ وَالصَّيْفِ", startTime: 43, endTime: 74 },
+            { number: 3, text: "فَلْيَعْبُدُوا رَبَّ هَذَا الْبَيْتِ", startTime: 75, endTime: 96 },
+            { number: 4, text: "الَّذِي أَطْعَمَهُم مِّن جُوعٍ", startTime: 97, endTime: 109 },
+            { number: 5, text: "وَآمَنَهُم مِّنْ خَوْفٍ", startTime: 110, endTime: 140 }
+        ]
     }
 ];

@@ -82,96 +82,86 @@ const LoginSection = () => {
       {/* Mobile Optimization: Dark Overlay for text readability */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
 
-      <div className="w-full max-w-md relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-10">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg tracking-tight">
-            Gal <span className="text-emerald-400">Fasalka</span>
-          </h2>
-          <p className="text-gray-200 text-lg drop-shadow-md">
-            Geli aqoonsigaaga si aad u bilowdo barashada
-          </p>
-        </div>
+      <div className="w-full max-w-md relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
 
-        {/* Optimized Glass Card */}
-        <div className="relative group/card">
-          <form
-            onSubmit={handleSubmit}
-            className="relative bg-white/10 backdrop-blur-xl border border-white/10 rounded-[40px] p-8 space-y-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(255,255,255,0.05)]"
-          >
-            {/* Student Name Input */}
-            <div className="space-y-2 group/field transition-all duration-300">
-              <label htmlFor="studentName" className="text-sm font-bold text-gray-300 group-focus-within/field:text-emerald-400 transition-colors flex items-center gap-2">
-                <User className="w-4 h-4 text-gray-400 group-focus-within/field:text-emerald-500 transition-colors" />
-                Magacaaga
-              </label>
-              <div className="relative group/input">
+        {/* Modern Glass Panel */}
+        <div className="relative bg-[#1a1a1a]/40 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-8 md:p-10">
+
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
+
+            {/* Header Row */}
+            <div className="text-center space-y-1 mb-2">
+              <h2 className="text-3xl font-bold text-white tracking-tight">Salaamu Calaykum!</h2>
+              <p className="text-zinc-400 font-medium">Soo Galis</p>
+            </div>
+
+            {/* Inputs Container */}
+            <div className="flex flex-col gap-4">
+
+              {/* Student Name */}
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                  <User className="w-5 h-5 text-emerald-500/80" />
+                </div>
                 <input
-                  id="studentName"
                   type="text"
                   value={studentName}
                   onChange={(e) => setStudentName(e.target.value)}
-                  placeholder="Geli magacaaga..."
-                  className="w-full px-5 py-4 bg-black/40 border border-white/10 group-focus-within/input:border-emerald-500/50 rounded-2xl text-white placeholder:text-gray-500 focus:outline-none focus:ring-0 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] transition-all duration-300 relative z-10"
+                  placeholder="Magacaaga"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:bg-white/10 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all outline-none"
                   disabled={isLoading}
                   maxLength={100}
                 />
-                {/* External Neon Glow on Focus - CSS Only */}
-                <div className="absolute inset-0 rounded-2xl bg-emerald-500/20 blur-md opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-300 -z-10" />
               </div>
-              {errors.studentName && (
-                <p className="text-red-400 text-sm mt-1">{errors.studentName}</p>
-              )}
-            </div>
 
-            {/* Access Code Input */}
-            <div className="space-y-2 group/field">
-              <label htmlFor="accessCode" className="text-sm font-bold text-gray-300 group-focus-within/field:text-emerald-400 transition-colors flex items-center gap-2">
-                <Key className="w-4 h-4 text-gray-400 group-focus-within/field:text-emerald-500 transition-colors" />
-                Aqoonsiga Ardayga (ID)
-              </label>
-              <div className="relative group/input">
+              {/* Access ID */}
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                  <Key className="w-5 h-5 text-emerald-500/80" />
+                </div>
                 <input
-                  id="accessCode"
                   type="text"
                   value={accessCode}
                   onChange={(e) => setAccessCode(e.target.value)}
-                  placeholder="Tusaale: 12345"
-                  className="w-full px-5 py-4 bg-black/40 border border-white/10 group-focus-within/input:border-emerald-500/50 rounded-2xl text-white placeholder:text-gray-500 focus:outline-none focus:ring-0 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] transition-all duration-300 font-mono tracking-wider relative z-10"
+                  placeholder="Aqoonsigaaga (ID)"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:bg-white/10 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all outline-none font-mono tracking-wide"
                   disabled={isLoading}
                   maxLength={50}
                 />
-                {/* External Neon Glow on Focus */}
-                <div className="absolute inset-0 rounded-2xl bg-emerald-500/20 blur-md opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-300 -z-10" />
               </div>
-              {errors.accessCode && (
-                <p className="text-red-400 text-sm mt-1">{errors.accessCode}</p>
+
+              {/* Error Display */}
+              {(errors.studentName || errors.accessCode) && (
+                <p className="text-red-400 text-xs text-center font-medium bg-red-500/10 py-1 rounded">
+                  {errors.studentName || errors.accessCode}
+                </p>
               )}
+
             </div>
 
-            {/* Submit Button */}
+            {/* Action Row */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full relative overflow-hidden bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-lg py-4 rounded-xl shadow-lg active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed transform-gpu"
+              className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-3 rounded-lg shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed border border-white/10 backdrop-blur-md"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>Sugaya...</span>
+                  <span>Loading...</span>
                 </div>
               ) : (
-                <div className="flex items-center justify-center gap-2">
-                  <LogIn className="w-5 h-5" />
-                  <span>Gal Fasalka</span>
-                </div>
+                "Soo Galis"
               )}
             </button>
 
-            {/* Help Text */}
-            <p className="text-center text-sm text-gray-400">
-              Ma haysatid ID? <a href="#" className="text-emerald-400 hover:text-emerald-300 transition-colors border-b border-transparent hover:border-emerald-400">La xiriir macalinka</a>
-            </p>
+            {/* Footer Row */}
+            <div className="text-center pt-2 border-t border-white/5">
+              <p className="text-sm text-zinc-500">
+                Ma lihid ID? <a href="#" className="text-emerald-400 hover:text-emerald-300 transition-colors font-medium">La xiriir Maamulka</a>
+              </p>
+            </div>
+
           </form>
         </div>
       </div>

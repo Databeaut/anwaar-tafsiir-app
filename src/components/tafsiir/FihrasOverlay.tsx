@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSurahAccess } from "@/hooks/useSurahAccess";
+import { surahManifest } from "@/data/surah-manifest";
 
 interface FihrasOverlayProps {
     isOpen: boolean;
@@ -88,15 +89,16 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
         fetchData();
     }, [isOpen, session?.keyId]);
 
-    // Data Definition
-    const surahList = [
-        { id: 1, displayOrder: 1, nameBase: "Surat Al-Fatiha", nameArabic: "سورة الفاتحة" },
-        { id: 114, displayOrder: 2, nameBase: "Surat An-Naas", nameArabic: "سورة الناس" },
-        { id: 113, displayOrder: 3, nameBase: "Surat Al-Falaq", nameArabic: "سورة الفلق" },
-        { id: 112, displayOrder: 4, nameBase: "Surat Al-Ikhlaas", nameArabic: "سورة الإخلاص" },
-        { id: 111, displayOrder: 5, nameBase: "Surat Al-Masad", nameArabic: "سورة المسد" },
-        { id: 110, displayOrder: 6, nameBase: "Surat An-Nasr", nameArabic: "سورة النصر" }
-    ].sort((a, b) => a.displayOrder - b.displayOrder);
+    // Generate List from Manifest
+    const surahList = surahManifest
+        .sort((a, b) => a.displayOrder - b.displayOrder)
+        .map(s => ({
+            id: s.id,
+            displayOrder: s.displayOrder,
+            nameBase: s.nameSomali,
+            nameArabic: s.nameArabic,
+            isComingSoon: s.lessons[0]?.subtitle === "Dhawaan Filo"
+        }));
 
     return (
         <AnimatePresence>
@@ -160,7 +162,9 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
                                             isActive
                                                 ? "bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_20px_-5px_rgba(16,185,129,0.3)]"
                                                 : isUnlocked
-                                                    ? "bg-white/5 border-white/10 hover:border-white/20"
+                                                    ? surah.isComingSoon
+                                                        ? "bg-white/5 border-white/5 opacity-70 hover:opacity-100" // Glass style for Coming Soon
+                                                        : "bg-white/5 border-white/10 hover:border-white/20"
                                                     : "bg-black/20 border-white/5 opacity-50 cursor-not-allowed"
                                         )}
                                     >
@@ -176,7 +180,9 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
                                                 ? "bg-emerald-500 text-black border-emerald-400"
                                                 : isCompleted
                                                     ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/20"
-                                                    : "bg-white/5 text-zinc-500 border-white/10 group-hover:bg-white/10"
+                                                    : surah.isComingSoon
+                                                        ? "bg-purple-500/10 text-purple-400 border-purple-500/20" // Purple badge for Coming Soon
+                                                        : "bg-white/5 text-zinc-500 border-white/10 group-hover:bg-white/10"
                                         )}>
                                             {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : surah.displayOrder}
                                         </div>
@@ -191,6 +197,11 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
                                                     {surah.nameBase}
                                                 </span>
                                                 {!isUnlocked && <Lock className="w-3 h-3 text-zinc-600" />}
+                                                {isUnlocked && surah.isComingSoon && (
+                                                    <span className="text-[10px] uppercase font-bold text-purple-400 tracking-wider bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20">
+                                                        Soon
+                                                    </span>
+                                                )}
                                             </div>
                                             <div className={cn(
                                                 "text-xs font-arabic truncate",
