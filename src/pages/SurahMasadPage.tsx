@@ -7,7 +7,7 @@ import CollapsibleSurahGrid from "@/components/tafsiir/CollapsibleSurahGrid";
 import { useState, useCallback } from "react";
 import { type Lesson } from "@/components/tafsiir/surahData";
 
-const SurahFalaqPage = () => {
+const SurahMasadPage = () => {
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
 
@@ -23,12 +23,12 @@ const SurahFalaqPage = () => {
         console.log("Lesson completed:", index);
     }, []);
 
-    // Data for Surah Al-Falaq
-    const falaqData = {
-        nameMeaning: "Al-Falaq (الفلق) waxaa loola jeedaa 'Waaberiga' ama 'Kala dilaaca'. Waa suuradda 113-aad ee Quraanka.",
-        revelationType: "Waa Makki (مكية), waxaana la soo dejiyey iyadoo la raacinayo suuradda An-Naas.",
-        revelationContext: "Waxay ku soo degtay in lagu daweeyo sixirka iyo in Allah laga magan-galo xumaanta makhluuqaadka.",
-        mainTheme: "Mawduuca ugu weyn waa magan-galka Allah (الاستعاذة) si looga badbaado makhluuqaadka xumaantooda iyo xaasidnimada."
+    // Data for Surah Al-Masad
+    const masadData = {
+        nameMeaning: "Al-Masad (المسد) waxaa loola jeedaa 'Xadhig adag' ama 'Saan'. Waxay ka hadlaysaa ciqaabta Abuu Lahab.",
+        revelationType: "Waa Makki (مكية), waxaana la soo dejiyey xilli ay jirtay cadaadis xooggan oo ka dhan ahaa Nabi Muxammad (NNKH).",
+        revelationContext: "Waxay ku soo degtay jawaab loo bixiyey Abuu Lahab oo u gaabsaday Nabiga markii uu dadka ugu yeeray Safaa.",
+        mainTheme: "Suuraddu waxay caddaynaysaa halaagga kuwa ka horyimaada diinta Allah iyo in xoolo iyo qaraabo toona aysan waxba ka tarayn."
     };
 
 
@@ -36,29 +36,33 @@ const SurahFalaqPage = () => {
     return (
         <div className="min-h-screen bg-[#0f0f0f] relative overflow-x-hidden">
             <FloatingDecorations />
-            <Navbar currentSurahId={113} />
+            {/* Navbar with Fihras */}
+            <Navbar currentSurahId={111} />
 
             <div className="max-w-5xl mx-auto px-4 py-8 relative z-10 space-y-8">
                 {/* VIDEO PLAYER: Active Learning Session */}
-                <div className="w-full -mt-8">
+                <div className="w-full -mt-8 relative">
+                    {/* Coming Soon logic removed as video is now deployed. */}
+
+                    {/* The Player Logic - Will still render the list below */}
                     <SmartVideoPlayer
                         onLessonsReady={handleLessonsReady}
                         onLessonChange={handleLessonChange}
                         onLessonCompleted={handleLessonCompleted}
                         currentLessonIndex={currentLessonIndex}
                         lessons={lessons}
-                        surahId={113}
+                        surahId={111}
                     />
                 </div>
 
                 {/* Info Card - SURAH DETAILS */}
-                {/* Info Ribbon */}
-                {/* Info Ribbon */}
-                <CollapsibleSurahGrid data={falaqData} />
+                {/* Info Ribbon - High Performance Insight */}
+                {/* Info Ribbon - High Performance Insight */}
+                <CollapsibleSurahGrid data={masadData} />
 
             </div>
         </div>
     );
 };
 
-export default SurahFalaqPage;
+export default SurahMasadPage;

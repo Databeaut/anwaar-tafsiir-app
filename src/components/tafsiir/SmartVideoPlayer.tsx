@@ -4,6 +4,7 @@ import { surahManifest } from "@/data/surah-manifest";
 import { Play, Pause, Lock, CheckCircle2, Volume2, VolumeX, Maximize, RefreshCcw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSurahAccess } from "@/hooks/useSurahAccess";
 
 declare global {
     interface Window {
@@ -30,6 +31,7 @@ const SmartVideoPlayer = ({
     surahId
 }: SmartVideoPlayerProps) => {
     const { session } = useAuth();
+    const { isLocked: checkIsLocked } = useSurahAccess(session?.keyId, surahId);
 
     // Core Player State
     const [player, setPlayer] = useState<any>(null);
@@ -56,6 +58,18 @@ const SmartVideoPlayer = ({
     const lastSyncTimeRef = useRef<number>(0);
     const playIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    // 0. ACCESS GUARD UPDATE
+    useEffect(() => {
+        if (checkIsLocked(surahId || 0) === false) {
+            console.log("🔓 Hook Report: Surah is UNLOCKED via Realtime.");
+            // Force unlock local lesson state if needed
+            const updatedLessons = lessons.map(l => ({ ...l, isLocked: false }));
+            if (lessons.some(l => l.isLocked)) {
+                onLessonsReady(updatedLessons);
+            }
+        }
+    }, [checkIsLocked, surahId, lessons, onLessonsReady]);
 
     // 1. MANIFEST LOADING (The Brain)
     useEffect(() => {
@@ -101,11 +115,10 @@ const SmartVideoPlayer = ({
         }
     }, []);
 
-    // 3. PROGRESS SYNC (Supabase)
+    // 3. PROGRESS & ACCESS SYNC (Supabase Realtime)
     const syncProgressToSupabase = async (lessonId: number, position: number, completed: boolean) => {
         if (!session?.keyId) return;
 
-        // Never un-complete a lesson
         const isAlreadyCompleted = completedLessonIds.has(lessonId);
         const finalCompletedStatus = completed || isAlreadyCompleted;
 
@@ -123,40 +136,45 @@ const SmartVideoPlayer = ({
     };
 
     useEffect(() => {
-        const fetchProgress = async () => {
+        const fetchProgressAndAccess = async () => {
             if (!session?.keyId || lessons.length === 0) {
                 if (!session?.keyId) setIsLoadingProgress(false);
                 return;
             }
 
             const activeLessonIds = lessons.map(l => l.id);
+            const activeSurahId = surahId || lessons[0]?.surahId; // Get Surah ID clearly
 
-            const { data, error } = await supabase
+            // A. Fetch Progress
+            const { data: progressData } = await supabase
                 .from('student_progress')
                 .select('lesson_id, last_position, is_completed')
                 .eq('student_access_key_id', session.keyId)
                 .in('lesson_id', activeLessonIds);
 
-            if (data && !error) {
+            if (progressData) {
                 const positions: Record<number, number> = {};
                 const completedSet = new Set<number>();
-
-                data.forEach(row => {
+                progressData.forEach(row => {
                     if (row.is_completed) {
                         onLessonCompleted(row.lesson_id);
                         completedSet.add(row.lesson_id);
                     }
-                    if (row.last_position > 0) {
-                        positions[row.lesson_id] = row.last_position;
-                    }
+                    if (row.last_position > 0) positions[row.lesson_id] = row.last_position;
                 });
                 setResumePositions(positions);
                 setCompletedLessonIds(completedSet);
             }
+
+            // B. Fetch Lock Logic is now handled by useSurahAccess Hook above
+
             setIsLoadingProgress(false);
         };
-        fetchProgress();
-    }, [session?.keyId, lessons]);
+
+        fetchProgressAndAccess();
+        // Hook handles subscription now
+
+    }, [session?.keyId, lessons.length, surahId]);
 
     // 4. MAIN PLAYER ENGINE (Robust Initialization)
     // Condition: All data must be ready before we touch the DOM
@@ -321,7 +339,20 @@ const SmartVideoPlayer = ({
         setIsPlaying(false);
 
         const currentLesson = lessons[currentLessonIndex];
+
+        // STRICT GUARD: Check against the Set of completed IDs
         const isAlreadyCompleted = completedLessonIds.has(currentLesson.id);
+
+        if (isAlreadyCompleted) {
+            console.log("Review mode: Suppression of completion card for Lesson ID:", currentLesson.id);
+            return; // Do nothing for second-timers
+        }
+
+        // SURGICAL FIX for Lesson 5 (111) & 6 (110): Absolute Persistence
+        if ((currentLesson.id === 111 || currentLesson.id === 110) && completedLessonIds.has(currentLesson.id)) {
+            console.log(`HARD GUARD: Suppressing completion modal for Lesson (${currentLesson.id}).`);
+            return;
+        }
 
         // GATEKEEPER: Silent Review Mode
         // If the student has already completed this lesson (Second Timer), the modal must NEVER appear.
@@ -339,8 +370,6 @@ const SmartVideoPlayer = ({
                 // For final lesson, just sync position, don't mark complete yet
                 syncProgressToSupabase(currentLesson.id, duration, false);
             }
-        } else {
-            console.log("Lesson completed previously. Suppressing modal/logic.");
         }
     };
 
@@ -359,21 +388,27 @@ const SmartVideoPlayer = ({
         const currentLesson = lessons[currentLessonIndex];
 
         // 1. Mark Complete in DB with CORRECT ID
+        // Note: The sync function already handles upserting 'is_completed: true'
         await syncProgressToSupabase(currentLesson.id, duration, true);
+
+        // 2. IMMEDIATE LOCAL UPDATE: Prevent re-trigger
+        // We add this ID to the set so that subsequent 'handleSegmentEnd' calls see it as completed.
         setCompletedLessonIds(prev => new Set(prev).add(currentLesson.id));
 
-        // 2. Open WhatsApp
+        // 3. Open WhatsApp
         const waLink = "https://wa.me/252672441316?text=Assalamu%20alaykum%20Macalin,%20waxaan%20si%20guul%20leh%20u%20dhameeyay%20Tafsiirka%20Surah%20Al-Fatiha.";
         window.open(waLink, '_blank');
 
-        // 3. Update UI & Fade Away
+        // 4. Update UI & Fade Away
         setIsSending(false);
         setMessageSent(true);
 
-        // 4. Auto-Close so student can replay
+        // 5. Auto-Close so student can replay
         setTimeout(() => {
             setShowCompletionOverlay(false);
             setMessageSent(false);
+            // Re-verify local state to be absolutely sure
+            setCompletedLessonIds(prev => new Set(prev).add(currentLesson.id));
         }, 2500);
     };
 

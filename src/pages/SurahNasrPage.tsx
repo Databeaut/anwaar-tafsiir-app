@@ -7,7 +7,7 @@ import CollapsibleSurahGrid from "@/components/tafsiir/CollapsibleSurahGrid";
 import { useState, useCallback } from "react";
 import { type Lesson } from "@/components/tafsiir/surahData";
 
-const SurahFalaqPage = () => {
+const SurahNasrPage = () => {
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
 
@@ -23,42 +23,42 @@ const SurahFalaqPage = () => {
         console.log("Lesson completed:", index);
     }, []);
 
-    // Data for Surah Al-Falaq
-    const falaqData = {
-        nameMeaning: "Al-Falaq (الفلق) waxaa loola jeedaa 'Waaberiga' ama 'Kala dilaaca'. Waa suuradda 113-aad ee Quraanka.",
-        revelationType: "Waa Makki (مكية), waxaana la soo dejiyey iyadoo la raacinayo suuradda An-Naas.",
-        revelationContext: "Waxay ku soo degtay in lagu daweeyo sixirka iyo in Allah laga magan-galo xumaanta makhluuqaadka.",
-        mainTheme: "Mawduuca ugu weyn waa magan-galka Allah (الاستعاذة) si looga badbaado makhluuqaadka xumaantooda iyo xaasidnimada."
+    // Data for Surah An-Nasr
+    const nasrData = {
+        nameMeaning: "An-Nasr (النصر) waxaa loola jeedaa 'Guusha'. Waa suuraddii ugu dambaysay ee soo dagta.",
+        revelationType: "Waa Madani (مدنية), waxaana la soo dejiyey Xajka Sagootinta (Xajjatul Wadaac).",
+        revelationContext: "Waxay bishaaraysay in geerida Nebiga (NNKH) ay soo dhawaatay iyo in diinta Islaamku ay guulaysatay.",
+        mainTheme: "Suuraddu waxay amraysaa in Allah loo tasbiixsado marka guushu timaado, laguna shukriyo."
     };
-
-
 
     return (
         <div className="min-h-screen bg-[#0f0f0f] relative overflow-x-hidden">
             <FloatingDecorations />
-            <Navbar currentSurahId={113} />
+            {/* Navbar with Fihras */}
+            <Navbar currentSurahId={110} />
 
             <div className="max-w-5xl mx-auto px-4 py-8 relative z-10 space-y-8">
                 {/* VIDEO PLAYER: Active Learning Session */}
-                <div className="w-full -mt-8">
+                <div className="w-full -mt-8 relative">
+
+                    {/* The Player Logic - Will still render the list below */}
                     <SmartVideoPlayer
                         onLessonsReady={handleLessonsReady}
                         onLessonChange={handleLessonChange}
                         onLessonCompleted={handleLessonCompleted}
                         currentLessonIndex={currentLessonIndex}
                         lessons={lessons}
-                        surahId={113}
+                        surahId={110}
                     />
                 </div>
 
-                {/* Info Card - SURAH DETAILS */}
-                {/* Info Ribbon */}
-                {/* Info Ribbon */}
-                <CollapsibleSurahGrid data={falaqData} />
+                {/* Info Ribbon - High Performance Insight */}
+                {/* Surah Details - High Performance Insight */}
+                <CollapsibleSurahGrid data={nasrData} />
 
             </div>
         </div>
     );
 };
 
-export default SurahFalaqPage;
+export default SurahNasrPage;

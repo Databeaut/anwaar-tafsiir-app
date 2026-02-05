@@ -169,5 +169,63 @@ export const surahManifest: SurahManifest[] = [
             { number: 3, text: "لَمۡ يَلِدۡ وَلَمۡ يُولَدۡ", startTime: 60, endTime: 73 },
             { number: 4, text: "وَلَمۡ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ", startTime: 74, endTime: 113 }
         ]
+    },
+    {
+        id: 111,
+        displayOrder: 5,
+        nameSomali: "Surah Al-Masad",
+        nameArabic: "سورة المسد",
+        lessons: [
+            {
+                id: 111,
+                surahId: 111,
+                lessonNumber: 1,
+                title: "Suuradda Al-Masad",
+                subtitle: "Tafsiirka Suuradda Al-Masad",
+                videoId: "xMFTWkqtTuw",
+                timestamps: {
+                    start: 0,
+                    end: 120,
+                    hardStop: 120
+                },
+                isLockedByDefault: true,
+                durationFormatted: "2:00"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "تَبَّتْ يَدَا أَبِي لَهَبٍ وَتَبَّ", startTime: 0, endTime: 22 },
+            { number: 2, text: "مَا أَغْنَىٰ عَنْهُ مَالُهُ وَمَا كَسَبَ", startTime: 23, endTime: 43 },
+            { number: 3, text: "سَيَصْلَىٰ نَارًا ذَاتَ لَهَبٍ", startTime: 44, endTime: 58 },
+            { number: 4, text: "وَامْرَأَتُهُ حَمَّالَةَ الْحَطَبِ", startTime: 59, endTime: 91 },
+            { number: 5, text: "فِي جِيدِهَا حَبْلٌ مِّن مَّسَدٍ", startTime: 91, endTime: 120 }
+        ]
+    },
+    {
+        id: 110,
+        displayOrder: 6,
+        nameSomali: "Surah An-Nasr",
+        nameArabic: "سورة النصر",
+        lessons: [
+            {
+                id: 110,
+                surahId: 110,
+                lessonNumber: 1,
+                title: "Suuradda An-Nasr",
+                subtitle: "Tafsiirka Suuradda An-Nasr",
+                videoId: "VhKBWUukdWo",
+                timestamps: {
+                    start: 0,
+                    end: 78,
+                    hardStop: 78
+                },
+                isLockedByDefault: true,
+                durationFormatted: "1:18"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ", startTime: 0, endTime: 10 },
+            { number: 2, text: "وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا", startTime: 11, endTime: 27 },
+            { number: 3, text: "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ ۚ إِنَّهُ كَانَ تَوَّابًا", startTime: 28, endTime: 78 }
+        ]
     }
 ];

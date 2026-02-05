@@ -8,6 +8,7 @@ export interface Lesson {
     isLocked: boolean;
     duration?: string;
     subtitle?: string;
+    surahId?: number;
 }
 
 export const courseConfig = {
