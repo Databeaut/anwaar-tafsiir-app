@@ -85,7 +85,7 @@ const LoginSection = () => {
       <div className="w-full max-w-md relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
 
         {/* Modern Glass Panel */}
-        <div className="relative bg-[#1a1a1a]/40 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-8 md:p-10">
+        <div className="relative bg-[#1a1a1a]/40 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl p-8 md:p-10">
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
 

@@ -97,7 +97,7 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
             displayOrder: s.displayOrder,
             nameBase: s.nameSomali,
             nameArabic: s.nameArabic,
-            isComingSoon: s.lessons[0]?.subtitle === "Dhawaan Filo"
+            isComingSoon: s.status === 'COMING_SOON' || s.lessons[0]?.subtitle === "Dhawaan Filo"
         }));
 
     return (

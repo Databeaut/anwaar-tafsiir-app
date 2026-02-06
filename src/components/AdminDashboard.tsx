@@ -8,10 +8,23 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList
+} from "@/components/ui/command";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import {
     Trash2, Search, Loader2, LogOut, Key, Send,
     MessageCircle, Users, BookOpen, Trophy, Unlock, Lock,
     Plus, UserPlus, Phone, CheckCircle2, XCircle, MoreHorizontal,
-    Filter
+    Filter, Check, ChevronsUpDown
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -51,8 +64,70 @@ const LESSONS = surahManifest
     .sort((a, b) => a.displayOrder - b.displayOrder)
     .map(surah => ({
         id: surah.id,
-        label: `Lesson ${surah.displayOrder}: ${surah.nameSomali.replace('Surah ', '')}`
+        label: `${surah.id}. ${surah.nameSomali.replace('Surah ', '')}`
     }));
+
+const StudentAccessSelector = ({
+    student,
+    onToggle
+}: {
+    student: AccessKey;
+    onToggle: (surahId: number, currentStatus: boolean) => void;
+}) => {
+    const [open, setOpen] = useState(false);
+
+    // Calculate total unlocked count for the badge
+    const unlockedCount = student.student_surah_access?.filter(r => r.is_unlocked).length || 0;
+
+    return (
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-[200px] justify-between bg-white/5 border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white"
+                >
+                    <span className="truncate">
+                        {unlockedCount > 0 ? `${unlockedCount} Unlocked` : "Manage Access"}
+                    </span>
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[250px] p-0 bg-[#0a0a0a] border-white/10 text-white backdrop-blur-xl">
+                <Command className="bg-transparent">
+                    <CommandInput placeholder="Search surah..." className="h-9 border-b border-white/10" />
+                    <CommandList>
+                        <CommandEmpty>No surah found.</CommandEmpty>
+                        <CommandGroup>
+                            {LESSONS.map((lesson) => {
+                                const hasAccess = student.student_surah_access?.some(r => r.surah_id === lesson.id && r.is_unlocked);
+                                return (
+                                    <CommandItem
+                                        key={lesson.id}
+                                        value={lesson.label}
+                                        onSelect={() => {
+                                            onToggle(lesson.id, hasAccess || false);
+                                            // Keep open to allow multiple selections
+                                        }}
+                                        className="text-white aria-selected:bg-white/10 aria-selected:text-emerald-400 cursor-pointer flex items-center justify-between py-2"
+                                    >
+                                        <span>{lesson.label}</span>
+                                        {hasAccess && (
+                                            <div className="bg-emerald-500/20 p-1 rounded-full">
+                                                <Check className="h-3 w-3 text-emerald-500" />
+                                            </div>
+                                        )}
+                                    </CommandItem>
+                                );
+                            })}
+                        </CommandGroup>
+                    </CommandList>
+                </Command>
+            </PopoverContent>
+        </Popover>
+    );
+};
 
 const AdminDashboard = () => {
     // Data State
@@ -373,26 +448,11 @@ const AdminDashboard = () => {
                                             </TableCell>
                                             <TableCell>
                                                 {/* Access Grid - Only visible on hover/select or always visible but low contrast */}
-                                                <div className="flex items-center gap-1.5">
-                                                    {LESSONS.map(lesson => {
-                                                        const hasAccess = student.student_surah_access?.some(r => r.surah_id === lesson.id && r.is_unlocked);
-                                                        return (
-                                                            <button
-                                                                key={lesson.id}
-                                                                onClick={() => handleToggleAccess(student.id, lesson.id, hasAccess || false)}
-                                                                title={`${lesson.label}: ${hasAccess ? "Unlocked" : "Locked"}`}
-                                                                className={cn(
-                                                                    "w-8 h-8 rounded-lg flex items-center justify-center border transition-all duration-200",
-                                                                    hasAccess
-                                                                        ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400 hover:bg-red-500/20 hover:border-red-500/30 hover:text-red-400"
-                                                                        : "bg-white/5 border-white/10 text-zinc-600 hover:bg-emerald-500/10 hover:border-emerald-500/20 hover:text-emerald-500"
-                                                                )}
-                                                            >
-                                                                {hasAccess ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
-                                                            </button>
-                                                        )
-                                                    })}
-                                                </div>
+                                                {/* Access Dropdown */}
+                                                <StudentAccessSelector
+                                                    student={student}
+                                                    onToggle={(surahId, status) => handleToggleAccess(student.id, surahId, status)}
+                                                />
                                             </TableCell>
                                             <TableCell className="text-right">
                                                 <div className="flex items-center justify-end gap-1 opacity-40 group-hover:opacity-100 transition-opacity">

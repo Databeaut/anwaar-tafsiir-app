@@ -30,6 +30,7 @@ export interface SurahManifest {
     nameArabic: string;
     lessons: LessonContent[];
     ayahs: AyahSegment[];
+    status?: 'COMING_SOON' | 'AVAILABLE' | 'LIVE';
 }
 
 export const surahManifest: SurahManifest[] = [
@@ -347,6 +348,102 @@ export const surahManifest: SurahManifest[] = [
             { number: 3, text: "فَلْيَعْبُدُوا رَبَّ هَذَا الْبَيْتِ", startTime: 75, endTime: 96 },
             { number: 4, text: "الَّذِي أَطْعَمَهُم مِّن جُوعٍ", startTime: 97, endTime: 109 },
             { number: 5, text: "وَآمَنَهُم مِّنْ خَوْفٍ", startTime: 110, endTime: 140 }
+        ]
+    },
+    {
+        id: 105,
+        displayOrder: 11,
+        nameSomali: "Surah Al-Fil",
+        nameArabic: "سورة الفيل",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 105,
+                surahId: 105,
+                lessonNumber: 1,
+                title: "Suuradda Al-Fil",
+                subtitle: "Tafsiirka Suuradda Al-Fil",
+                videoId: "fJQnGK88yo4",
+                timestamps: {
+                    start: 0,
+                    end: 228,
+                    hardStop: 228
+                },
+                isLockedByDefault: true,
+                durationFormatted: "3:48"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ", startTime: 0, endTime: 126 },
+            { number: 2, text: "أَلَمْ يَجْعَلْ كَيْدَهُمْ فِي تَضْلِيلٍ", startTime: 126, endTime: 141 },
+            { number: 3, text: "وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ", startTime: 142, endTime: 174 },
+            { number: 4, text: "تَرْمِيهِم بِحِجَارَةٍ مِّن سِجِّيلٍ", startTime: 175, endTime: 194 },
+            { number: 5, text: "فَجَعَلَهُمْ كَعَصْفٍ مَّأْكُولٍ", startTime: 195, endTime: 228 }
+        ]
+    },
+    {
+        id: 104,
+        displayOrder: 12,
+        nameSomali: "Surah Al-Humazah",
+        nameArabic: "سورة الهمزة",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 104,
+                surahId: 104,
+                lessonNumber: 1,
+                title: "Suuradda Al-Humazah",
+                subtitle: "Tafsiirka Suuradda Al-Humazah",
+                videoId: "wS_Q4LUI16Y",
+                timestamps: {
+                    start: 0,
+                    end: 347,
+                    hardStop: 347
+                },
+                isLockedByDefault: true,
+                durationFormatted: "5:47"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "وَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍ", startTime: 0, endTime: 68 },
+            { number: 2, text: "الَّذِي جَمَعَ مَالًا وَعَدَّدَهُ", startTime: 69, endTime: 123 },
+            { number: 3, text: "يَحْسَبُ أَنَّ مَالَهُ أَخْلَدَهُ", startTime: 124, endTime: 173 },
+            { number: 4, text: "كَلَّا لَيُنبَذَنَّ فِي الْحُطَمَةِ", startTime: 174, endTime: 213 },
+            { number: 5, text: "وَمَا أَدْرَاكَ مَا الْحُطَمَةُ", startTime: 214, endTime: 224 },
+            { number: 6, text: "نَارُ اللَّهِ الْمُوقَدَةُ", startTime: 225, endTime: 247 },
+            { number: 7, text: "الَّتِي تَطَّلِعُ عَلَى الْأَفْئِدَةِ", startTime: 248, endTime: 277 },
+            { number: 8, text: "إِنَّهَا عَلَيْهِم مُّؤْصَدَةٌ", startTime: 278, endTime: 316 },
+            { number: 9, text: "فِي عَمَدٍ مُّمَدَّدَةٍ", startTime: 317, endTime: 347 }
+        ]
+    },
+    {
+        id: 103,
+        displayOrder: 13,
+        nameSomali: "Surah Al-Asr",
+        nameArabic: "سورة العصر",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 103,
+                surahId: 103,
+                lessonNumber: 1,
+                title: "Suuradda Al-Asr",
+                subtitle: "Tafsiirka Suuradda Al-Asr",
+                videoId: "9lw4eCkckaw",
+                timestamps: {
+                    start: 0,
+                    end: 82,
+                    hardStop: 82
+                },
+                isLockedByDefault: true,
+                durationFormatted: "1:22"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "وَالْعَصْرِ", startTime: 0, endTime: 24 },
+            { number: 2, text: "إِنَّ الْإِنسَانَ لَفِي خُسْرٍ", startTime: 25, endTime: 36 },
+            { number: 3, text: "إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ", startTime: 37, endTime: 47 },
+            { number: 3, text: "وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ", startTime: 48, endTime: 82 }
         ]
     }
 ];
