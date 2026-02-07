@@ -445,5 +445,39 @@ export const surahManifest: SurahManifest[] = [
             { number: 3, text: "إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ", startTime: 37, endTime: 47 },
             { number: 3, text: "وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ", startTime: 48, endTime: 82 }
         ]
+    },
+    {
+        id: 102,
+        displayOrder: 14,
+        nameSomali: "Surah At-Takaasur",
+        nameArabic: "سورة التكاثر",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 102,
+                surahId: 102,
+                lessonNumber: 1,
+                title: "Suuradda At-Takaasur",
+                subtitle: "Tafsiirka Suuradda At-Takaasur",
+                videoId: "_VKr67MqAlA",
+                timestamps: {
+                    start: 0,
+                    end: 558,
+                    hardStop: 558
+                },
+                isLockedByDefault: true,
+                durationFormatted: "9:18"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "أَلْهَاكُمُ التَّكَاثُرُ", startTime: 0, endTime: 66 },
+            { number: 2, text: "حَتَّىٰ زُرْتُمُ الْمَقَابِرَ", startTime: 67, endTime: 136 },
+            { number: 3, text: "كَلَّا سَوْفَ تَعْلَمُونَ", startTime: 137, endTime: 235 },
+            { number: 4, text: "ثُمَّ كَلَّا سَوْفَ تَعْلَمُونَ", startTime: 236, endTime: 244 },
+            { number: 5, text: "كَلَّا لَوْ تَعْلَمُونَ عِلْمَ الْيَقِينِ", startTime: 245, endTime: 295 },
+            { number: 6, text: "لَتَرَوُنَّ الْجَحِيمَ", startTime: 296, endTime: 315 },
+            { number: 7, text: "ثُمَّ لَتَرَوُنَّهَا عَيْنَ الْيَقِينِ", startTime: 316, endTime: 359 },
+            { number: 8, text: "ثُمَّ لَتُسْأَلُنَّ يَوْمَئِذٍ عَنِ النَّعِيمِ", startTime: 360, endTime: 558 }
+        ]
     }
 ];
