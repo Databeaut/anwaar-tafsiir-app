@@ -480,4 +480,42 @@ export const surahManifest: SurahManifest[] = [
             { number: 8, text: "ثُمَّ لَتُسْأَلُنَّ يَوْمَئِذٍ عَنِ النَّعِيمِ", startTime: 360, endTime: 558 }
         ]
     }
+    ,
+    {
+        id: 101,
+        displayOrder: 15,
+        nameSomali: "Surah Al-Qaari'ah",
+        nameArabic: "سورة القارعة",
+        status: "COMING_SOON",
+        lessons: [
+            {
+                id: 101,
+                surahId: 101,
+                lessonNumber: 1,
+                title: "Suuradda Al-Qaari'ah",
+                subtitle: "Tafsiirka Suuradda Al-Qaari'ah",
+                videoId: "placeholder",
+                timestamps: {
+                    start: 0,
+                    end: 0,
+                    hardStop: 0
+                },
+                isLockedByDefault: true,
+                durationFormatted: "0:00"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "الْقَارِعَةُ", startTime: 0, endTime: 0 },
+            { number: 2, text: "مَا الْقَارِعَةُ", startTime: 0, endTime: 0 },
+            { number: 3, text: "وَمَا أَدْرَاكَ مَا الْقَارِعَةُ", startTime: 0, endTime: 0 },
+            { number: 4, text: "يَوْمَ يَكُونُ النَّاسُ كَالْفَرَاشِ الْمَبْثُوثِ", startTime: 0, endTime: 0 },
+            { number: 5, text: "وَتَكُونُ الْجِبَالُ كَالْعِهْنِ الْمَنفُوشِ", startTime: 0, endTime: 0 },
+            { number: 6, text: "فَأَمَّا مَن ثَقُلَتْ مَوَازِينُهُ", startTime: 0, endTime: 0 },
+            { number: 7, text: "فَهُوَ فِي عِيشَةٍ رَّاضِيَةٍ", startTime: 0, endTime: 0 },
+            { number: 8, text: "وَأَمَّا مَنْ خَفَّتْ مَوَازِينُهُ", startTime: 0, endTime: 0 },
+            { number: 9, text: "فَأُمُّهُ هَاوِيَةٌ", startTime: 0, endTime: 0 },
+            { number: 10, text: "وَمَا أَدْرَاكَ مَا هِيَهْ", startTime: 0, endTime: 0 },
+            { number: 11, text: "نَارٌ حَامِيَةٌ", startTime: 0, endTime: 0 }
+        ]
+    }
 ];
