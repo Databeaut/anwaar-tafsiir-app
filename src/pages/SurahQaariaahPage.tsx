@@ -1,9 +1,26 @@
 import Navbar from "@/components/tafsiir/Navbar";
 import FloatingDecorations from "@/components/tafsiir/FloatingDecorations";
 import CollapsibleSurahGrid from "@/components/tafsiir/CollapsibleSurahGrid";
-import ComingSoonPlaceholder from "@/components/tafsiir/ComingSoonPlaceholder";
+import SmartVideoPlayer from "@/components/tafsiir/SmartVideoPlayer";
+import { useState, useCallback } from "react";
+import { type Lesson } from "@/components/tafsiir/surahData";
 
 const SurahQaariaahPage = () => {
+    const [lessons, setLessons] = useState<Lesson[]>([]);
+    const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
+
+    const handleLessonsReady = useCallback((newLessons: Lesson[]) => {
+        setLessons(newLessons);
+    }, []);
+
+    const handleLessonChange = useCallback((index: number) => {
+        setCurrentLessonIndex(index);
+    }, []);
+
+    const handleLessonCompleted = useCallback((index: number) => {
+        console.log("Lesson completed:", index);
+    }, []);
+
     // Data for Surah Al-Qaari'ah (101)
     const qaariaahData = {
         nameMeaning: "Al-Qaari'ah (القارعة) waxaa loola jeedaa 'Tan wax garaacda' ama 'Dhawaaq naxdin leh' (waa mid ka mid ah magacyada Maalinta Qiyaamaha).",
@@ -19,9 +36,16 @@ const SurahQaariaahPage = () => {
             <Navbar currentSurahId={101} />
 
             <div className="max-w-5xl mx-auto px-4 py-8 relative z-10 space-y-8">
-                {/* VIDEO SECTION: Premium "Dhawaan Filo" Glass-Blur Placeholder */}
+                {/* VIDEO PLAYER: Active Learning Session */}
                 <div className="w-full -mt-8 relative">
-                    <ComingSoonPlaceholder />
+                    <SmartVideoPlayer
+                        onLessonsReady={handleLessonsReady}
+                        onLessonChange={handleLessonChange}
+                        onLessonCompleted={handleLessonCompleted}
+                        currentLessonIndex={currentLessonIndex}
+                        lessons={lessons}
+                        surahId={101}
+                    />
                 </div>
 
                 {/* Surah Details - Foldable Glass Grid */}

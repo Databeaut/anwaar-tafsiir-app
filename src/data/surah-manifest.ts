@@ -486,7 +486,7 @@ export const surahManifest: SurahManifest[] = [
         displayOrder: 15,
         nameSomali: "Surah Al-Qaari'ah",
         nameArabic: "سورة القارعة",
-        status: "COMING_SOON",
+        status: "LIVE",
         lessons: [
             {
                 id: 101,
@@ -494,28 +494,27 @@ export const surahManifest: SurahManifest[] = [
                 lessonNumber: 1,
                 title: "Suuradda Al-Qaari'ah",
                 subtitle: "Tafsiirka Suuradda Al-Qaari'ah",
-                videoId: "placeholder",
+                videoId: "RIsJx95Z_dc",
                 timestamps: {
                     start: 0,
-                    end: 0,
-                    hardStop: 0
+                    end: 356,
+                    hardStop: 356
                 },
                 isLockedByDefault: true,
-                durationFormatted: "0:00"
+                durationFormatted: "5:56"
             }
         ],
         ayahs: [
-            { number: 1, text: "الْقَارِعَةُ", startTime: 0, endTime: 0 },
-            { number: 2, text: "مَا الْقَارِعَةُ", startTime: 0, endTime: 0 },
-            { number: 3, text: "وَمَا أَدْرَاكَ مَا الْقَارِعَةُ", startTime: 0, endTime: 0 },
-            { number: 4, text: "يَوْمَ يَكُونُ النَّاسُ كَالْفَرَاشِ الْمَبْثُوثِ", startTime: 0, endTime: 0 },
-            { number: 5, text: "وَتَكُونُ الْجِبَالُ كَالْعِهْنِ الْمَنفُوشِ", startTime: 0, endTime: 0 },
-            { number: 6, text: "فَأَمَّا مَن ثَقُلَتْ مَوَازِينُهُ", startTime: 0, endTime: 0 },
-            { number: 7, text: "فَهُوَ فِي عِيشَةٍ رَّاضِيَةٍ", startTime: 0, endTime: 0 },
-            { number: 8, text: "وَأَمَّا مَنْ خَفَّتْ مَوَازِينُهُ", startTime: 0, endTime: 0 },
-            { number: 9, text: "فَأُمُّهُ هَاوِيَةٌ", startTime: 0, endTime: 0 },
-            { number: 10, text: "وَمَا أَدْرَاكَ مَا هِيَهْ", startTime: 0, endTime: 0 },
-            { number: 11, text: "نَارٌ حَامِيَةٌ", startTime: 0, endTime: 0 }
+            { number: 1, text: "الْقَارِعَةُ", startTime: 0, endTime: 30 },
+            { number: 2, text: "مَا الْقَارِعَةُ", startTime: 31, endTime: 39 },
+            { number: 3, text: "وَمَا أَدْرَاكَ مَا الْقَارِعَةُ", startTime: 40, endTime: 65 },
+            { number: 4, text: "يَوْمَ يَكُونُ النَّاسُ كَالْفَرَاشِ الْمَبْثُوثِ", startTime: 66, endTime: 136 },
+            { number: 5, text: "وَتَكُونُ الْجِبَالُ كَالْعِهْنِ الْمَنْفُوشِ", startTime: 137, endTime: 184 },
+            { number: 6, text: "فَأَمَّا مَنْ ثَقُلَتْ مَوَازِينُهُ", startTime: 185, endTime: 197 },
+            { number: 7, text: "فَهُوَ فِي عِيشَةٍ رَاضِيَةٍ", startTime: 198, endTime: 253 },
+            { number: 8, text: "وَأَمَّا مَنْ خَفَّتْ مَوَازِينُهُ", startTime: 254, endTime: 315 },
+            { number: 10, text: "وَمَا أَدْرَاكَ مَا هِيَهْ", startTime: 316, endTime: 331 },
+            { number: 11, text: "نَارٌ حَامِيَةٌ", startTime: 332, endTime: 356 }
         ]
     }
 ];

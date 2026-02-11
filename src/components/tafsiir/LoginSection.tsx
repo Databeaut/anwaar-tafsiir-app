@@ -108,7 +108,7 @@ const LoginSection = () => {
                   value={studentName}
                   onChange={(e) => setStudentName(e.target.value)}
                   placeholder="Magacaaga"
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:bg-white/10 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all outline-none"
+                  className="w-full pl-10 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:bg-white/10 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all outline-none"
                   disabled={isLoading}
                   maxLength={100}
                 />
@@ -124,7 +124,7 @@ const LoginSection = () => {
                   value={accessCode}
                   onChange={(e) => setAccessCode(e.target.value)}
                   placeholder="Aqoonsigaaga (ID)"
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:bg-white/10 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all outline-none font-mono tracking-wide"
+                  className="w-full pl-10 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:bg-white/10 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all outline-none font-mono tracking-wide"
                   disabled={isLoading}
                   maxLength={50}
                 />
@@ -143,7 +143,7 @@ const LoginSection = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-3 rounded-lg shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed border border-white/10 backdrop-blur-md"
+              className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed border border-white/10 backdrop-blur-md"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">

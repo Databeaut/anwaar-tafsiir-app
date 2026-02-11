@@ -68,8 +68,8 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
                     const finishedSurahs = new Set<number>();
 
                     progressData.forEach(p => {
-                        // Direct mapping for short surahs
-                        if (p.lesson_id >= 110 && p.lesson_id <= 114) {
+                        // Direct mapping for short surahs (110-114 and the new 101)
+                        if ((p.lesson_id >= 101 && p.lesson_id <= 114)) {
                             finishedSurahs.add(p.lesson_id);
                         }
                         // Fatiha Logic: If Lesson 1 (ID 1) is done, we mark Surah 1 as done (simplification)
