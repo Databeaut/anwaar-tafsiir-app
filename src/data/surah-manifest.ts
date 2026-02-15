@@ -516,5 +516,42 @@ export const surahManifest: SurahManifest[] = [
             { number: 10, text: "وَمَا أَدْرَاكَ مَا هِيَهْ", startTime: 316, endTime: 331 },
             { number: 11, text: "نَارٌ حَامِيَةٌ", startTime: 332, endTime: 356 }
         ]
+    },
+    {
+        id: 100,
+        displayOrder: 16,
+        nameSomali: "Surah Al-Caadiyaat",
+        nameArabic: "سورة العاديات",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 100,
+                surahId: 100,
+                lessonNumber: 1,
+                title: "Suuradda Al-Caadiyaat",
+                subtitle: "Tafsiirka Suuradda Al-Caadiyaat",
+                videoId: "W6kv46odgoE",
+                timestamps: {
+                    start: 0,
+                    end: 500,
+                    hardStop: 500
+                },
+                isLockedByDefault: true,
+                durationFormatted: "8:20"
+            }
+        ],
+        ayahs: [
+            { number: 1, text: "وَالْعَادِيَاتِ ضَبْحًا", startTime: 0, endTime: 91 },
+            { number: 2, text: "فَالْمُورِيَاتِ قَدْحًا", startTime: 92, endTime: 142 },
+            { number: 3, text: "فَالْمُغِيرَاتِ صُبْحًا", startTime: 143, endTime: 161 },
+            { number: 4, text: "فَأَثَرْنَ بِهِ نَقْعًا", startTime: 162, endTime: 195 },
+            { number: 5, text: "فَوَسَطْنَ بِهِ جَمْعًا", startTime: 196, endTime: 234 },
+            { number: 6, text: "إِنَّ الْإِنْسَانَ لِرَبِّهِ لَكَنُودٌ", startTime: 235, endTime: 351 },
+            { number: 7, text: "وَإِنَّهُ عَلَىٰ ذَٰلِكَ لَشَهِيدٌ", startTime: 352, endTime: 383 },
+            { number: 8, text: "وَإِنَّهُ لِحُبِّ الْخَيْرِ لَشَدِيدٌ", startTime: 384, endTime: 430 },
+            { number: 9, text: "أَفَلَا يَعْلَمُ إِذَا بُعْثِرَ مَا فِي الْقُبُورِ", startTime: 431, endTime: 452 },
+            { number: 10, text: "وَحُصِّلَ مَا فِي الصُّدُورِ", startTime: 453, endTime: 479 },
+            { number: 11, text: "إِنَّ رَبَّهُمْ بِهِمْ يَوْمَئِذٍ لَخَبِيرٌ", startTime: 480, endTime: 500 }
+        ]
     }
 ];
