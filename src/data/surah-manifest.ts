@@ -67,7 +67,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 660,
                     hardStop: 637
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "5:37"
             }
         ],
@@ -99,7 +99,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 141,
                     hardStop: 136
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "2:16"
             }
         ],
@@ -160,7 +160,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 115,
                     hardStop: 113
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "1:53"
             }
         ],
@@ -189,7 +189,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 120,
                     hardStop: 120
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "2:00"
             }
         ],
@@ -219,7 +219,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 78,
                     hardStop: 78
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "1:18"
             }
         ],
@@ -247,7 +247,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 38,
                     hardStop: 38
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "0:38"
             }
         ],
@@ -276,7 +276,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 59,
                     hardStop: 59
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "0:59"
             }
         ],
@@ -304,7 +304,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 306,
                     hardStop: 306
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "5:06"
             }
         ],
@@ -338,7 +338,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 140,
                     hardStop: 140
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "2:20"
             }
         ],
@@ -369,7 +369,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 228,
                     hardStop: 228
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "3:48"
             }
         ],
@@ -400,7 +400,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 347,
                     hardStop: 347
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "5:47"
             }
         ],
@@ -435,7 +435,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 82,
                     hardStop: 82
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "1:22"
             }
         ],
@@ -465,7 +465,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 558,
                     hardStop: 558
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "9:18"
             }
         ],
@@ -500,7 +500,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 356,
                     hardStop: 356
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "5:56"
             }
         ],
@@ -536,7 +536,7 @@ export const surahManifest: SurahManifest[] = [
                     end: 500,
                     hardStop: 500
                 },
-                isLockedByDefault: true,
+                isLockedByDefault: false,
                 durationFormatted: "8:20"
             }
         ],
@@ -553,5 +553,80 @@ export const surahManifest: SurahManifest[] = [
             { number: 10, text: "وَحُصِّلَ مَا فِي الصُّدُورِ", startTime: 453, endTime: 479 },
             { number: 11, text: "إِنَّ رَبَّهُمْ بِهِمْ يَوْمَئِذٍ لَخَبِيرٌ", startTime: 480, endTime: 500 }
         ]
+    },
+    {
+        id: 99,
+        displayOrder: 16,
+        nameSomali: "Suurat Sulsilat",
+        nameArabic: "سورة الزلزلة",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 99,
+                surahId: 99,
+                lessonNumber: 1,
+                title: "Suurat Sulsilat",
+                subtitle: "Tafsiirka Suuradda Sulsilat",
+                videoId: "zfEipzp-YHA",
+                timestamps: {
+                    start: 0,
+                    end: 646,
+                    hardStop: 646
+                },
+                isLockedByDefault: false,
+                durationFormatted: "10:46"
+            }
+        ],
+        ayahs: []
+    },
+    {
+        id: 98,
+        displayOrder: 17,
+        nameSomali: "Suurat Al-Bayyinah",
+        nameArabic: "سورة البينة",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 98,
+                surahId: 98,
+                lessonNumber: 1,
+                title: "Suurat Al-Bayyinah",
+                subtitle: "Tafsiirka Suuradda Al-Bayyinah",
+                videoId: "dZg_N_3IdPo",
+                timestamps: {
+                    start: 0,
+                    end: 330,
+                    hardStop: 330
+                },
+                isLockedByDefault: false,
+                durationFormatted: "5:30"
+            }
+        ],
+        ayahs: []
+    },
+    {
+        id: 97,
+        displayOrder: 18,
+        nameSomali: "Suurat Al-Qadr",
+        nameArabic: "سورة القدر",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 97,
+                surahId: 97,
+                lessonNumber: 1,
+                title: "Suurat Al-Qadr",
+                subtitle: "Tafsiirka Suuradda Al-Qadr",
+                videoId: "mjsbL5cWvZQ",
+                timestamps: {
+                    start: 0,
+                    end: 132,
+                    hardStop: 132
+                },
+                isLockedByDefault: false,
+                durationFormatted: "2:12"
+            }
+        ],
+        ayahs: []
     }
 ];

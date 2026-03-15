@@ -5,7 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSurahAccess } from "@/hooks/useSurahAccess";
 import { surahManifest } from "@/data/surah-manifest";
 
 interface FihrasOverlayProps {
@@ -19,7 +18,6 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
     const navigate = useNavigate();
 
     // State
-    const { unlockedSurahs } = useSurahAccess(session?.keyId);
     const [completedSurahs, setCompletedSurahs] = useState<Set<number>>(new Set());
     const [loading, setLoading] = useState(false);
 
@@ -68,8 +66,8 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
                     const finishedSurahs = new Set<number>();
 
                     progressData.forEach(p => {
-                        // Direct mapping for short surahs (100-114)
-                        if ((p.lesson_id >= 100 && p.lesson_id <= 114)) {
+                        // Direct mapping for short surahs (97-114)
+                        if ((p.lesson_id >= 97 && p.lesson_id <= 114)) {
                             finishedSurahs.add(p.lesson_id);
                         }
                         // Fatiha Logic: If Lesson 1 (ID 1) is done, we mark Surah 1 as done (simplification)
@@ -96,8 +94,7 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
             id: s.id,
             displayOrder: s.displayOrder,
             nameBase: s.nameSomali,
-            nameArabic: s.nameArabic,
-            isComingSoon: s.status === 'COMING_SOON' || s.lessons[0]?.subtitle === "Dhawaan Filo"
+            nameArabic: s.nameArabic
         }));
 
     return (
@@ -140,7 +137,6 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
                         {/* List Area */}
                         <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
                             {surahList.map((surah) => {
-                                const isUnlocked = unlockedSurahs.has(surah.id);
                                 const isCompleted = completedSurahs.has(surah.id);
                                 const isActive = currentSurahId === surah.id;
 
@@ -148,24 +144,17 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
                                     <motion.button
                                         layout
                                         key={surah.id}
-                                        disabled={!isUnlocked}
                                         onClick={() => {
-                                            if (isUnlocked) {
-                                                navigate(surah.id === 1 ? '/' : `/surah/${surah.id}`);
-                                                onClose();
-                                            }
+                                            navigate(surah.id === 1 ? '/' : `/surah/${surah.id}`);
+                                            onClose();
                                         }}
-                                        whileHover={isUnlocked ? { scale: 1.02, backgroundColor: "rgba(255,255,255,0.08)" } : {}}
-                                        whileTap={isUnlocked ? { scale: 0.98 } : {}}
+                                        whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.08)" }}
+                                        whileTap={{ scale: 0.98 }}
                                         className={cn(
                                             "w-full relative group flex items-center gap-4 p-4 rounded-2xl border text-left transition-all duration-300",
                                             isActive
                                                 ? "bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_20px_-5px_rgba(16,185,129,0.3)]"
-                                                : isUnlocked
-                                                    ? surah.isComingSoon
-                                                        ? "bg-white/5 border-white/5 opacity-70 hover:opacity-100" // Glass style for Coming Soon
-                                                        : "bg-white/5 border-white/10 hover:border-white/20"
-                                                    : "bg-black/20 border-white/5 opacity-50 cursor-not-allowed"
+                                                : "bg-white/5 border-white/10 hover:border-white/20"
                                         )}
                                     >
                                         {/* Status Indicator Line (Active) */}
@@ -180,9 +169,7 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
                                                 ? "bg-emerald-500 text-black border-emerald-400"
                                                 : isCompleted
                                                     ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/20"
-                                                    : surah.isComingSoon
-                                                        ? "bg-purple-500/10 text-purple-400 border-purple-500/20" // Purple badge for Coming Soon
-                                                        : "bg-white/5 text-zinc-500 border-white/10 group-hover:bg-white/10"
+                                                    : "bg-white/5 text-zinc-500 border-white/10 group-hover:bg-white/10"
                                         )}>
                                             {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : surah.displayOrder}
                                         </div>
@@ -192,16 +179,10 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
                                             <div className="flex items-center justify-between mb-0.5">
                                                 <span className={cn(
                                                     "text-sm font-bold truncate",
-                                                    isActive ? "text-white" : isUnlocked ? "text-zinc-200" : "text-zinc-500"
+                                                    isActive ? "text-white" : "text-zinc-200"
                                                 )}>
                                                     {surah.nameBase}
                                                 </span>
-                                                {!isUnlocked && <Lock className="w-3 h-3 text-zinc-600" />}
-                                                {isUnlocked && surah.isComingSoon && (
-                                                    <span className="text-[10px] uppercase font-bold text-purple-400 tracking-wider bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20">
-                                                        Soon
-                                                    </span>
-                                                )}
                                             </div>
                                             <div className={cn(
                                                 "text-xs font-arabic truncate",
@@ -212,12 +193,10 @@ const FihrasOverlay = ({ isOpen, onClose, currentSurahId }: FihrasOverlayProps) 
                                         </div>
 
                                         {/* Arrow / Active Glow */}
-                                        {isUnlocked && (
-                                            <ChevronRight className={cn(
-                                                "w-4 h-4 transition-transform group-hover:translate-x-1",
-                                                isActive ? "text-emerald-500" : "text-zinc-600 group-hover:text-zinc-400"
-                                            )} />
-                                        )}
+                                        <ChevronRight className={cn(
+                                            "w-4 h-4 transition-transform group-hover:translate-x-1",
+                                            isActive ? "text-emerald-500" : "text-zinc-600 group-hover:text-zinc-400"
+                                        )} />
                                     </motion.button>
                                 );
                             })}

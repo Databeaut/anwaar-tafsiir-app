@@ -61,7 +61,7 @@ const CollapsibleSurahGrid = ({ data }: CollapsibleSurahGridProps) => {
         <div className="w-full max-w-5xl mx-auto font-sans">
             <motion.div
                 layout
-                className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden shadow-2xl"
+                className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden shadow-2xl"
             >
                 {/* Header Section */}
                 <motion.button

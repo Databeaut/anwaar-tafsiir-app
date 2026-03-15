@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -67,67 +67,8 @@ const LESSONS = surahManifest
         label: `${surah.id}. ${surah.nameSomali.replace('Surah ', '')}`
     }));
 
-const StudentAccessSelector = ({
-    student,
-    onToggle
-}: {
-    student: AccessKey;
-    onToggle: (surahId: number, currentStatus: boolean) => void;
-}) => {
-    const [open, setOpen] = useState(false);
+// StudentAccessSelector removed
 
-    // Calculate total unlocked count for the badge
-    const unlockedCount = student.student_surah_access?.filter(r => r.is_unlocked).length || 0;
-
-    return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-[200px] justify-between bg-white/5 border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white"
-                >
-                    <span className="truncate">
-                        {unlockedCount > 0 ? `${unlockedCount} Unlocked` : "Manage Access"}
-                    </span>
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[250px] p-0 bg-[#0a0a0a] border-white/10 text-white backdrop-blur-xl">
-                <Command className="bg-transparent">
-                    <CommandInput placeholder="Search surah..." className="h-9 border-b border-white/10" />
-                    <CommandList>
-                        <CommandEmpty>No surah found.</CommandEmpty>
-                        <CommandGroup>
-                            {LESSONS.map((lesson) => {
-                                const hasAccess = student.student_surah_access?.some(r => r.surah_id === lesson.id && r.is_unlocked);
-                                return (
-                                    <CommandItem
-                                        key={lesson.id}
-                                        value={lesson.label}
-                                        onSelect={() => {
-                                            onToggle(lesson.id, hasAccess || false);
-                                            // Keep open to allow multiple selections
-                                        }}
-                                        className="text-white aria-selected:bg-white/10 aria-selected:text-emerald-400 cursor-pointer flex items-center justify-between py-2"
-                                    >
-                                        <span>{lesson.label}</span>
-                                        {hasAccess && (
-                                            <div className="bg-emerald-500/20 p-1 rounded-full">
-                                                <Check className="h-3 w-3 text-emerald-500" />
-                                            </div>
-                                        )}
-                                    </CommandItem>
-                                );
-                            })}
-                        </CommandGroup>
-                    </CommandList>
-                </Command>
-            </PopoverContent>
-        </Popover>
-    );
-};
 
 const AdminDashboard = () => {
     // Data State
@@ -140,8 +81,8 @@ const AdminDashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const [bulkActionLesson, setBulkActionLesson] = useState<number>(114);
-    const [isBulkProcessing, setIsBulkProcessing] = useState(false);
+    // const [bulkActionLesson, setBulkActionLesson] = useState<number>(114);
+    // const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
     // Form State
     const [newStudentName, setNewStudentName] = useState('');
@@ -157,7 +98,7 @@ const AdminDashboard = () => {
             // Fetch Keys
             const { data: keysData, error: keysError } = await supabase
                 .from('access_keys')
-                .select('*, student_surah_access(surah_id, is_unlocked)')
+                .select('*')
                 .order('created_at', { ascending: false });
 
             if (keysError) {
@@ -219,41 +160,7 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleToggleAccess = async (studentId: string, surahId: number, currentStatus: boolean) => {
-        const newState = !currentStatus;
-        const { error } = await supabase.from('student_surah_access').upsert({
-            student_key_id: studentId,
-            surah_id: surahId,
-            is_unlocked: newState
-        }, { onConflict: 'student_key_id, surah_id' });
-
-        if (!error) {
-            toast({ title: newState ? "Unlocked" : "Locked", description: `Access updated.` });
-            setRefreshTrigger(prev => prev + 1);
-        }
-    };
-
-    const handleBulkUnlock = async () => {
-        if (selectedIds.size === 0) return;
-        setIsBulkProcessing(true);
-
-        const updates = Array.from(selectedIds).map(studentId => ({
-            student_key_id: studentId,
-            surah_id: bulkActionLesson,
-            is_unlocked: true
-        }));
-
-        const { error } = await supabase.from('student_surah_access').upsert(updates, { onConflict: 'student_key_id, surah_id' });
-
-        if (error) {
-            toast({ title: "Bulk Error", description: "Failed to update some records", variant: "destructive" });
-        } else {
-            toast({ title: "Bulk Success", description: `Unlocked Lesson for ${selectedIds.size} students.` });
-            setRefreshTrigger(prev => prev + 1);
-            setSelectedIds(new Set());
-        }
-        setIsBulkProcessing(false);
-    };
+    // handleToggleAccess and handleBulkUnlock removed
 
     const sendWhatsApp = (key: AccessKey) => {
         if (!key.phone) return;
@@ -339,43 +246,7 @@ const AdminDashboard = () => {
                     </div>
                 </div>
 
-                {/* --- BULK ACTIONS --- */}
-                {selectedIds.size > 0 && (
-                    <div className="sticky top-20 z-30 animate-in slide-in-from-top-4 fade-in duration-300">
-                        <div className="bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-xl p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-2xl">
-                            <div className="flex items-center gap-3">
-                                <Badge className="bg-emerald-500 text-black font-bold h-6 px-3">{selectedIds.size} Selected</Badge>
-                                <span className="text-sm text-emerald-200">Manage access for selected students</span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <select
-                                    className="bg-black/40 border border-white/10 text-white text-sm rounded-lg px-3 py-2 outline-none focus:border-emerald-500/50"
-                                    value={bulkActionLesson}
-                                    onChange={(e) => setBulkActionLesson(Number(e.target.value))}
-                                >
-                                    {LESSONS.map(l => <option key={l.id} value={l.id}>{l.label}</option>)}
-                                </select>
-                                <Button
-                                    size="sm"
-                                    onClick={handleBulkUnlock}
-                                    disabled={isBulkProcessing}
-                                    className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold"
-                                >
-                                    {isBulkProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Unlock className="w-4 h-4 mr-2" />}
-                                    Unlock All
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    onClick={() => setSelectedIds(new Set())}
-                                    className="text-zinc-400 hover:text-white"
-                                >
-                                    Clear
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                {/* --- BULK ACTIONS (Removed: Global Unlock Active) --- */}
 
                 {/* --- DATA TABLE --- */}
                 <div className="rounded-2xl border border-white/5 bg-black/20 backdrop-blur-sm overflow-hidden shadow-xl">
@@ -391,21 +262,21 @@ const AdminDashboard = () => {
                                 </TableHead>
                                 <TableHead className="text-zinc-400">Student Identity</TableHead>
                                 <TableHead className="text-zinc-400">Contact</TableHead>
-                                <TableHead className="text-zinc-400">Access Record</TableHead>
+                                {/* <TableHead className="text-zinc-400">Access Record</TableHead> */}
                                 <TableHead className="text-zinc-400 text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {loading ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="h-32 text-center text-zinc-500">
+                                    <TableCell colSpan={4} className="h-32 text-center text-zinc-500">
                                         <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2" />
                                         Loading Records...
                                     </TableCell>
                                 </TableRow>
                             ) : filteredKeys.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="h-32 text-center text-zinc-500">
+                                    <TableCell colSpan={4} className="h-32 text-center text-zinc-500">
                                         No students found matching "{searchTerm}"
                                     </TableCell>
                                 </TableRow>
@@ -446,14 +317,13 @@ const AdminDashboard = () => {
                                                     <span className="text-xs text-zinc-700 italic">No phone</span>
                                                 )}
                                             </TableCell>
-                                            <TableCell>
-                                                {/* Access Grid - Only visible on hover/select or always visible but low contrast */}
-                                                {/* Access Dropdown */}
+                                            {/* Access Dropdown Removed */}
+                                            {/* <TableCell>
                                                 <StudentAccessSelector
                                                     student={student}
                                                     onToggle={(surahId, status) => handleToggleAccess(student.id, surahId, status)}
                                                 />
-                                            </TableCell>
+                                            </TableCell> */}
                                             <TableCell className="text-right">
                                                 <div className="flex items-center justify-end gap-1 opacity-40 group-hover:opacity-100 transition-opacity">
                                                     <Button
