@@ -26,6 +26,12 @@ import SurahCaadiyaatPage from "./pages/SurahCaadiyaatPage";
 import SurahSulsilatPage from "./pages/SurahSulsilatPage";
 import SurahBayyinahPage from "./pages/SurahBayyinahPage";
 import SurahQadrPage from "./pages/SurahQadrPage";
+import SurahAlaqPage from "./pages/SurahAlaqPage";
+import SurahTiinPage from "./pages/SurahTiinPage";
+import SurahSharhPage from "./pages/SurahSharhPage";
+import SurahDuhaaPage from "./pages/SurahDuhaaPage";
+import SurahLaylPage from "./pages/SurahLaylPage";
+import SurahShamsPage from "./pages/SurahShamsPage";
 
 
 const queryClient = new QueryClient();
@@ -58,6 +64,12 @@ const App = () => (
             <Route path="/surah/99" element={<SurahSulsilatPage />} />
             <Route path="/surah/98" element={<SurahBayyinahPage />} />
             <Route path="/surah/97" element={<SurahQadrPage />} />
+            <Route path="/surah/96" element={<SurahAlaqPage />} />
+            <Route path="/surah/95" element={<SurahTiinPage />} />
+            <Route path="/surah/94" element={<SurahSharhPage />} />
+            <Route path="/surah/93" element={<SurahDuhaaPage />} />
+            <Route path="/surah/92" element={<SurahLaylPage />} />
+            <Route path="/surah/91" element={<SurahShamsPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

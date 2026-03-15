@@ -353,8 +353,8 @@ const SmartVideoPlayer = ({
         }
 
         // SURGICAL FIX for Progress Persistence: Absolute Persistence
-        // IDs: 97-114 (Includes the latest lessons)
-        if ((currentLesson.id >= 97 && currentLesson.id <= 114) && completedLessonIdsRef.current.has(currentLesson.id)) {
+        // IDs: 91-114 (Includes the latest lessons)
+        if ((currentLesson.id >= 91 && currentLesson.id <= 114) && completedLessonIdsRef.current.has(currentLesson.id)) {
             console.log(`HARD GUARD: Suppressing completion modal for Lesson (${currentLesson.id}).`);
             return;
         }

@@ -628,5 +628,155 @@ export const surahManifest: SurahManifest[] = [
             }
         ],
         ayahs: []
+    },
+    {
+        id: 96,
+        displayOrder: 19,
+        nameSomali: "Suurat Al-Alaq",
+        nameArabic: "سورة العلق",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 96,
+                surahId: 96,
+                lessonNumber: 1,
+                title: "Suurat Al-Alaq",
+                subtitle: "Tafsiirka Suuradda Al-Alaq",
+                videoId: "TL8Mh-FA6GI",
+                timestamps: {
+                    start: 0,
+                    end: 560,
+                    hardStop: 560
+                },
+                isLockedByDefault: false,
+                durationFormatted: "9:20"
+            }
+        ],
+        ayahs: []
+    },
+    {
+        id: 95,
+        displayOrder: 20,
+        nameSomali: "Suurat At-Tiin",
+        nameArabic: "سورة التين",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 95,
+                surahId: 95,
+                lessonNumber: 1,
+                title: "Suurat At-Tiin",
+                subtitle: "Tafsiirka Suuradda At-Tiin",
+                videoId: "OqYdoViYJms",
+                timestamps: {
+                    start: 0,
+                    end: 287,
+                    hardStop: 287
+                },
+                isLockedByDefault: false,
+                durationFormatted: "4:47"
+            }
+        ],
+        ayahs: []
+    },
+    {
+        id: 94,
+        displayOrder: 21,
+        nameSomali: "Suurat Ash-Sharh",
+        nameArabic: "سورة الشرح",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 94,
+                surahId: 94,
+                lessonNumber: 1,
+                title: "Suurat Ash-Sharh",
+                subtitle: "Tafsiirka Suuradda Ash-Sharh",
+                videoId: "e_ZdNdRaY08",
+                timestamps: {
+                    start: 0,
+                    end: 381,
+                    hardStop: 381
+                },
+                isLockedByDefault: false,
+                durationFormatted: "6:21"
+            }
+        ],
+        ayahs: []
+    },
+    {
+        id: 93,
+        displayOrder: 22,
+        nameSomali: "Suurat Ad-Duhaa",
+        nameArabic: "سورة الضحى",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 93,
+                surahId: 93,
+                lessonNumber: 1,
+                title: "Suurat Ad-Duhaa",
+                subtitle: "Tafsiirka Suuradda Ad-Duhaa",
+                videoId: "iwKh55cY-cY",
+                timestamps: {
+                    start: 0,
+                    end: 268,
+                    hardStop: 268
+                },
+                isLockedByDefault: false,
+                durationFormatted: "4:28"
+            }
+        ],
+        ayahs: []
+    },
+    {
+        id: 92,
+        displayOrder: 23,
+        nameSomali: "Suurat Al-Layl",
+        nameArabic: "سورة الليل",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 92,
+                surahId: 92,
+                lessonNumber: 1,
+                title: "Suurat Al-Layl",
+                subtitle: "Tafsiirka Suuradda Al-Layl",
+                videoId: "Mo86gZHzjOk",
+                timestamps: {
+                    start: 0,
+                    end: 802,
+                    hardStop: 802
+                },
+                isLockedByDefault: false,
+                durationFormatted: "13:22"
+            }
+        ],
+        ayahs: []
+    },
+    {
+        id: 91,
+        displayOrder: 24,
+        nameSomali: "Suurat Ash-Shams",
+        nameArabic: "سورة الشمس",
+        status: "LIVE",
+        lessons: [
+            {
+                id: 91,
+                surahId: 91,
+                lessonNumber: 1,
+                title: "Suurat Ash-Shams",
+                subtitle: "Tafsiirka Suuradda Ash-Shams",
+                videoId: "uYsXgu5qR4U",
+                timestamps: {
+                    start: 0,
+                    end: 898,
+                    hardStop: 898
+                },
+                isLockedByDefault: false,
+                durationFormatted: "14:58"
+            }
+        ],
+        ayahs: []
     }
 ];
